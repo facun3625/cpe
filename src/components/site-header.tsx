@@ -123,40 +123,56 @@ export function SiteHeader() {
         </nav>
         <div className="flex shrink-0 items-center gap-2">
           <SiteSearch />
-          <button type="button" onClick={() => setOpen(!open)} className="grid h-11 w-11 cursor-pointer place-items-center rounded-full border border-white/20 bg-white/10 text-white xl:hidden" aria-label={open ? "Cerrar menú" : "Abrir menú"} aria-expanded={open}><span className="text-xl">{open ? "×" : "☰"}</span></button>
+          <button
+            type="button"
+            onClick={() => setOpen((prev) => { if (prev) setMobileOpen(null); return !prev; })}
+            className="grid h-11 w-11 cursor-pointer place-items-center rounded-full border border-white/20 bg-white/10 text-white transition-colors xl:hidden"
+            aria-label={open ? "Cerrar menú" : "Abrir menú"}
+            aria-expanded={open}
+          >
+            <span className="relative flex h-4 w-5 flex-col justify-between">
+              <span className={`h-0.5 w-full rounded-full bg-white transition-all duration-300 ease-in-out ${open ? "translate-y-[7px] rotate-45" : ""}`} />
+              <span className={`h-0.5 w-full rounded-full bg-white transition-all duration-200 ease-in-out ${open ? "scale-x-0 opacity-0" : "opacity-100"}`} />
+              <span className={`h-0.5 w-full rounded-full bg-white transition-all duration-300 ease-in-out ${open ? "-translate-y-[7px] -rotate-45" : ""}`} />
+            </span>
+          </button>
         </div>
       </div>
-      {open && (
-        <nav className="absolute inset-x-0 top-full max-h-[calc(100vh-80px)] overflow-y-auto border-t border-white/10 bg-cpe-navy px-5 pb-6 pt-3 shadow-2xl sm:max-h-[calc(100vh-96px)] xl:hidden" aria-label="Navegación móvil">
-          {NAV_LINKS.map((link) => {
-            if (!link.children) {
-              return (
-                <Link key={link.href} href={link.href} onClick={() => setOpen(false)} className="flex cursor-pointer items-center justify-between border-b border-white/10 py-3.5 font-semibold text-white active:bg-white/10">
-                  {link.label}<span aria-hidden>↗</span>
-                </Link>
-              );
-            }
-            const isOpen = mobileOpen === link.href;
+      <nav
+        className={`absolute inset-x-0 top-full max-h-[calc(100vh-80px)] overflow-y-auto border-t border-white/10 bg-cpe-navy px-5 pb-6 pt-3 shadow-2xl transition-all duration-300 ease-out sm:max-h-[calc(100vh-96px)] xl:hidden ${open ? "visible translate-y-0 opacity-100" : "invisible -translate-y-2 opacity-0"}`}
+        aria-label="Navegación móvil"
+        aria-hidden={!open}
+      >
+        {NAV_LINKS.map((link) => {
+          if (!link.children) {
             return (
-              <div key={link.href} className="border-b border-white/10">
-                <button type="button" onClick={() => setMobileOpen(isOpen ? null : link.href)} className="flex w-full cursor-pointer items-center justify-between py-3.5 font-semibold text-white active:bg-white/10" aria-expanded={isOpen}>
-                  {link.label}
-                  <span className={`text-xs transition-transform ${isOpen ? "rotate-180" : ""}`} aria-hidden>▾</span>
-                </button>
-                {isOpen && (
+              <Link key={link.href} href={link.href} onClick={() => setOpen(false)} tabIndex={open ? 0 : -1} className="flex cursor-pointer items-center justify-between border-b border-white/10 py-3.5 font-semibold text-white active:bg-white/10">
+                {link.label}<span aria-hidden>↗</span>
+              </Link>
+            );
+          }
+          const isOpen = mobileOpen === link.href;
+          return (
+            <div key={link.href} className="border-b border-white/10">
+              <button type="button" onClick={() => setMobileOpen(isOpen ? null : link.href)} tabIndex={open ? 0 : -1} className="flex w-full cursor-pointer items-center justify-between py-3.5 font-semibold text-white active:bg-white/10" aria-expanded={isOpen}>
+                {link.label}
+                <span className={`text-xs transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} aria-hidden>▾</span>
+              </button>
+              <div className={`grid transition-all duration-300 ease-in-out ${isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+                <div className="overflow-hidden">
                   <div className="pb-3 pl-4">
                     {link.children.map((child) => (
-                      <Link key={child.href} href={child.href} onClick={() => { setOpen(false); setMobileOpen(null); }} className="block cursor-pointer py-2.5 text-sm font-medium text-white/80 active:bg-white/10">
+                      <Link key={child.href} href={child.href} onClick={() => { setOpen(false); setMobileOpen(null); }} tabIndex={open && isOpen ? 0 : -1} className="block cursor-pointer py-2.5 text-sm font-medium text-white/80 active:bg-white/10">
                         {child.label}
                       </Link>
                     ))}
                   </div>
-                )}
+                </div>
               </div>
-            );
-          })}
-        </nav>
-      )}
+            </div>
+          );
+        })}
+      </nav>
     </header>
   );
 }
