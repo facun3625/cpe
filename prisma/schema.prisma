@@ -1,0 +1,242 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String
+  role         Role     @default(ADMIN)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+}
+
+model Novedad {
+  id          String           @id @default(cuid())
+  titulo      String
+  slug        String           @unique
+  resumen     String
+  contenido   String?
+  categoria   String           @default("Institucional")
+  imagenUrl   String?
+  galeria     String[]
+  videoUrl    String?
+  publicada   Boolean          @default(true)
+  publicadoEn DateTime         @default(now())
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  archivos    NovedadArchivo[]
+}
+
+model NovedadArchivo {
+  id        String   @id @default(cuid())
+  novedadId String
+  novedad   Novedad  @relation(fields: [novedadId], references: [id], onDelete: Cascade)
+  nombre    String
+  url       String
+  orden     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Suscriptor {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+enum DocumentoTipo {
+  DICTAMEN
+  REGLAMENTO
+  NOTA_MODELO
+  BECA
+}
+
+model Documento {
+  id            String        @id @default(cuid())
+  tipo          DocumentoTipo
+  titulo        String
+  grupo         String?
+  archivoUrl    String?
+  noReconocida  Boolean       @default(false)
+  orden         Int           @default(0)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Tramite {
+  id         String   @id @default(cuid())
+  slug       String   @unique
+  titulo     String
+  texto      String
+  requisitos String[]
+  orden      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Comision {
+  id                   String   @id @default(cuid())
+  titulo               String
+  texto                String
+  tramitesRelacionados String[]
+  orden                Int      @default(0)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+
+enum AutoridadGrupo {
+  CONSEJO_DIRECTIVO
+  VOCAL_TITULAR
+  VOCAL_SUPLENTE
+  SINDICO
+  ETICA_TITULAR
+  ETICA_SUPLENTE
+}
+
+model Autoridad {
+  id        String         @id @default(cuid())
+  grupo     AutoridadGrupo
+  rol       String?
+  nombre    String
+  orden     Int            @default(0)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+model HitoHistoria {
+  id        String   @id @default(cuid())
+  anio      String
+  titulo    String
+  texto     String
+  orden     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Sede {
+  id        String   @id @default(cuid())
+  nombre    String
+  direccion String
+  telefonos String[]
+  horario   String
+  email     String?
+  orden     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model NomencladorItem {
+  id           String   @id @default(cuid())
+  nombre       String
+  tiempo       String
+  upe          Int
+  cd           Float
+  cn           Float
+  dn           Float
+  noReconocida Boolean  @default(false)
+  orden        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model SeccionItem {
+  id        String   @id @default(cuid())
+  pagina    String
+  titulo    String
+  texto     String
+  href      String?
+  tag       String?
+  orden     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PaginaTexto {
+  id        String   @id @default(cuid())
+  pagina    String   @unique
+  contenido Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum NivelMatricula {
+  ENFERMERO
+  LICENCIADO
+  AUXILIAR
+}
+
+model Matriculado {
+  id        String         @id @default(cuid())
+  apellido  String
+  nombre    String
+  dni       String         @unique
+  matricula String
+  nivel     NivelMatricula
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+model BibliotecaCategoria {
+  id        String           @id @default(cuid())
+  nombre    String
+  orden     Int              @default(0)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  posts     BibliotecaPost[]
+}
+
+model BibliotecaPost {
+  id          String              @id @default(cuid())
+  categoriaId String
+  categoria   BibliotecaCategoria @relation(fields: [categoriaId], references: [id], onDelete: Cascade)
+  titulo      String
+  bajada      String
+  portadaUrl  String?
+  archivoUrl  String?
+  publicado   Boolean             @default(true)
+  orden       Int                 @default(0)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+}
+
+/// Fila única (id fijo "global") con la configuración SEO del sitio.
+model SeoConfig {
+  id                 String   @id @default("global")
+  titulo             String   @default("Colegio de Profesionales en Enfermería de Santa Fe")
+  descripcion        String   @default("")
+  palabrasClave      String   @default("")
+  imagenOg           String?
+  twitterHandle      String?
+  verificacionGoogle String?
+  verificacionBing   String?
+  updatedAt          DateTime @updatedAt
+}
+
+enum PopupTipo {
+  TEXTO
+  IMAGEN
+  VIDEO
+}
+
+/// Fila única (id fijo "global") con la configuración del pop-up de bienvenida.
+model PopupConfig {
+  id             String    @id @default("global")
+  activo         Boolean   @default(false)
+  tipo           PopupTipo @default(TEXTO)
+  titulo         String?
+  texto          String?
+  imagenUrl      String?
+  videoUrl       String?
+  mostrarSiempre Boolean   @default(false)
+  updatedAt      DateTime  @updatedAt
+}

@@ -36,6 +36,11 @@ yarn-error.log*
 # vercel
 .vercel
 
+# archivos subidos desde el panel de administración (deben persistir en el servidor,
+# pero no versionarse en git)
+/public/uploads/*
+!/public/uploads/.gitkeep
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

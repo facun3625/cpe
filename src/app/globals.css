@@ -1,26 +1,58 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f9faf7;
+  --foreground: #17313a;
+
+  --color-cpe-navy: #082f3b;
+  --color-cpe-navy-light: #124b58;
+  --color-cpe-blue: #267f87;
+  --color-cpe-royal: #2f5f95;
+  --color-cpe-royal-dark: #24487a;
+  --color-cpe-gold: #e6b95c;
+  --color-cpe-gold-dark: #ca9640;
+  --color-cpe-bg: #f1f3ee;
+  --color-cpe-coral: #d96f55;
+  --color-cpe-coral-dark: #bf5943;
+  --color-cpe-mint: #8bd2c5;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-cpe-navy: var(--color-cpe-navy);
+  --color-cpe-navy-light: var(--color-cpe-navy-light);
+  --color-cpe-blue: var(--color-cpe-blue);
+  --color-cpe-royal: var(--color-cpe-royal);
+  --color-cpe-royal-dark: var(--color-cpe-royal-dark);
+  --color-cpe-gold: var(--color-cpe-gold);
+  --color-cpe-gold-dark: var(--color-cpe-gold-dark);
+  --color-cpe-bg: var(--color-cpe-bg);
+  --color-cpe-coral: var(--color-cpe-coral);
+  --color-cpe-coral-dark: var(--color-cpe-coral-dark);
+  --color-cpe-mint: var(--color-cpe-mint);
+  --font-sans: var(--font-montserrat);
+  --font-display: var(--font-montserrat);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Escala tipográfica del sitio, un poco más chica que el default de Tailwind. */
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-lg: 1.0625rem;
+  --text-xl: 1.1875rem;
+  --text-2xl: 1.4375rem;
+  --text-3xl: 1.75rem;
+  --text-4xl: 2.125rem;
+  --text-5xl: 2.875rem;
+  --text-6xl: 3.5rem;
+  --text-7xl: 4.125rem;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
+
+html { scroll-behavior: smooth; scroll-padding-top: 120px; }
+::selection { background: #8bd2c5; color: #082f3b; }
+button, a { -webkit-tap-highlight-color: transparent; }
