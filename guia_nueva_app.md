@@ -20,11 +20,12 @@ docker ps --format "table {{.Names}}\t{{.Ports}}"
 | 80/443 | Nginx               |
 | 3000   | profly-api          |
 | 3001   | profly-web          |
-| 3006   | arai                |
+| 3002-3014 | arai, auro, cpt, cravero, ferrer, hablapraxia, kairos, mit, modashopsantafe, muebles-test, penalva, sgo, yaa |
+| 3015   | cpe (web.cpesantafe.com.ar) |
 | 5432   | sgo-db              |
 | 5433   | arai-db (fix)       |
-| 5435   | estudio_ferrer_db   |
-| 5436   | cravero-db          |
+| 5434-5443 | mit-db, estudio_ferrer_db, cravero-db, auro-db, hablapraxia-db, cpt-db, modashopsantafe-db, kairos-db, muebles-test-db, yaa-db |
+| 5444   | cpe-db              |
 
 Elegí un puerto para la app (ej: `3007`) y uno para la DB (ej: `5437`).
 
