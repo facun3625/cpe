@@ -32,10 +32,19 @@ model Novedad {
   galeria     String[]
   videoUrl    String?
   publicada   Boolean          @default(true)
+  destacadaHome Boolean        @default(false)
   publicadoEn DateTime         @default(now())
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
   archivos    NovedadArchivo[]
+}
+
+model NovedadCategoria {
+  id        String   @id @default(cuid())
+  nombre    String   @unique
+  orden     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model NovedadArchivo {

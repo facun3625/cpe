@@ -9,9 +9,14 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
     popup = await prisma.popupConfig.findUnique({ where: { id: "global" } });
   } catch {}
 
+  let novedadCategorias: string[] = [];
+  try {
+    novedadCategorias = (await prisma.novedadCategoria.findMany({ orderBy: { orden: "asc" } })).map((c) => c.nombre);
+  } catch {}
+
   return (
     <>
-      <SiteHeader />
+      <SiteHeader novedadCategorias={novedadCategorias} />
       <main className="flex-1">{children}</main>
       <SiteFooter />
       {popup && (

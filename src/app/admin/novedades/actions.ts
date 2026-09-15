@@ -67,6 +67,7 @@ export async function createNovedad(formData: FormData) {
   const categoria = String(formData.get("categoria") ?? "Institucional").trim();
   const videoUrl = String(formData.get("videoUrl") ?? "").trim();
   const publicada = formData.get("publicada") === "on";
+  const destacadaHome = formData.get("destacadaHome") === "on";
   const imagen = formData.get("imagen") as File | null;
 
   if (!titulo || !resumen) {
@@ -88,6 +89,7 @@ export async function createNovedad(formData: FormData) {
       galeria,
       videoUrl: videoUrl || null,
       publicada,
+      destacadaHome,
       archivos: adjuntos.length > 0 ? { create: adjuntos.map((a, i) => ({ ...a, orden: i })) } : undefined,
     },
   });
@@ -106,6 +108,7 @@ export async function updateNovedad(id: string, formData: FormData) {
   const categoria = String(formData.get("categoria") ?? "Institucional").trim();
   const videoUrl = String(formData.get("videoUrl") ?? "").trim();
   const publicada = formData.get("publicada") === "on";
+  const destacadaHome = formData.get("destacadaHome") === "on";
   const imagen = formData.get("imagen") as File | null;
   const archivosEliminar = formData.getAll("archivosEliminar").map(String);
 
@@ -122,6 +125,7 @@ export async function updateNovedad(id: string, formData: FormData) {
     contenido: string | null;
     categoria: string;
     publicada: boolean;
+    destacadaHome: boolean;
     videoUrl: string | null;
     galeria: string[];
     imagenUrl?: string;
@@ -131,6 +135,7 @@ export async function updateNovedad(id: string, formData: FormData) {
     contenido: contenido || null,
     categoria: categoria || "Institucional",
     publicada,
+    destacadaHome,
     videoUrl: videoUrl || null,
     galeria,
   };
@@ -159,6 +164,15 @@ export async function deleteNovedad(id: string) {
   await requireSession();
 
   await prisma.novedad.delete({ where: { id } });
+
+  revalidatePath("/");
+  revalidatePath("/admin/novedades");
+}
+
+export async function toggleDestacadaHome(id: string, destacadaHome: boolean) {
+  await requireSession();
+
+  await prisma.novedad.update({ where: { id }, data: { destacadaHome } });
 
   revalidatePath("/");
   revalidatePath("/admin/novedades");

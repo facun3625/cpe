@@ -5,12 +5,12 @@ import { NovedadCard } from "@/components/novedad-card";
 
 export const dynamic = "force-dynamic";
 
-const CATEGORIAS = ["Sede Santa Fe", "Delegación Rafaela", "Delegación Reconquista"];
-
 export default async function Page({ searchParams }: { searchParams: Promise<{ categoria?: string }> }){
   const { categoria } = await searchParams;
   let novedades: Awaited<ReturnType<typeof prisma.novedad.findMany>>=[];
+  let CATEGORIAS: string[] = [];
   try { novedades=await prisma.novedad.findMany({where:{publicada:true, ...(categoria?{categoria}:{})},orderBy:{publicadoEn:"desc"}}); } catch {}
+  try { CATEGORIAS=(await prisma.novedadCategoria.findMany({orderBy:{orden:"asc"}})).map((c)=>c.nombre); } catch {}
   return <InternalPage eyebrow="Novedades" title="Lo que pasa en nuestra comunidad." intro="Artículos de interés y novedades de la Sede Santa Fe y las delegaciones de Rafaela y Reconquista.">
     <div className="mb-8 flex flex-wrap gap-2">
       <Link href="/novedades" className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wide transition ${!categoria ? "bg-cpe-navy text-white" : "bg-white text-cpe-navy border border-slate-200"}`}>Todas</Link>

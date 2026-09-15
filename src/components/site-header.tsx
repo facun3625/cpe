@@ -24,16 +24,7 @@ const NAV_LINKS: NavLink[] = [
   },
   { href: "/dictamenes", label: "Dictámenes" },
   { href: "/matriculados", label: "Matriculados Activos" },
-  {
-    href: "/novedades",
-    label: "Novedades",
-    children: [
-      { href: "/novedades", label: "Artículos de interés" },
-      { href: "/novedades?categoria=Sede Santa Fe", label: "Sede Santa Fe" },
-      { href: "/novedades?categoria=Delegación Rafaela", label: "Delegación Rafaela" },
-      { href: "/novedades?categoria=Delegación Reconquista", label: "Delegación Reconquista" },
-    ],
-  },
+  { href: "/novedades", label: "Novedades" },
   { href: "/nomenclador", label: "Nomenclador" },
   { href: "/tramites", label: "Trámites" },
   { href: "/becas", label: "Becas" },
@@ -48,13 +39,25 @@ const NAV_LINKS: NavLink[] = [
   },
 ];
 
-export function SiteHeader() {
+export function SiteHeader({ novedadCategorias = [] }: { novedadCategorias?: string[] }) {
   const [open, setOpen] = useState(false);
   const [desktopOpen, setDesktopOpen] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState<string | null>(null);
   const pathname = usePathname();
   const navRef = useRef<HTMLElement>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const navLinks: NavLink[] = NAV_LINKS.map((link) =>
+    link.href === "/novedades"
+      ? {
+          ...link,
+          children: [
+            { href: "/novedades", label: "Todas" },
+            ...novedadCategorias.map((c) => ({ href: `/novedades?categoria=${encodeURIComponent(c)}`, label: c })),
+          ],
+        }
+      : link,
+  );
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -72,7 +75,7 @@ export function SiteHeader() {
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:h-24 sm:px-8 xl:h-[104px]">
         <Link href="/" onClick={() => setOpen(false)} className="relative z-10 shrink-0"><Image src="/logo_final.png" alt="CPE Santa Fe" width={885} height={256} priority className="h-12 w-auto object-contain object-left sm:h-16 xl:h-[76px]" /></Link>
         <nav ref={navRef} className="hidden items-center gap-1 xl:flex" aria-label="Navegación principal">
-          {NAV_LINKS.map((link) => {
+          {navLinks.map((link) => {
             const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
             const isOpen = desktopOpen === link.href;
             if (!link.children) {
@@ -143,7 +146,7 @@ export function SiteHeader() {
         aria-label="Navegación móvil"
         aria-hidden={!open}
       >
-        {NAV_LINKS.map((link) => {
+        {navLinks.map((link) => {
           if (!link.children) {
             return (
               <Link key={link.href} href={link.href} onClick={() => setOpen(false)} tabIndex={open ? 0 : -1} className="flex cursor-pointer items-center justify-between border-b border-white/10 py-3.5 font-semibold text-white active:bg-white/10">

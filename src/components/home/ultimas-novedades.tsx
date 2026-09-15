@@ -6,8 +6,13 @@ export async function UltimasNovedades() {
   let novedades: Awaited<ReturnType<typeof prisma.novedad.findMany>> = [];
   try {
     novedades = await prisma.novedad.findMany({
-      where: { publicada: true }, orderBy: { publicadoEn: "desc" }, take: 4,
+      where: { publicada: true, destacadaHome: true }, orderBy: { publicadoEn: "desc" }, take: 4,
     });
+    if (novedades.length === 0) {
+      novedades = await prisma.novedad.findMany({
+        where: { publicada: true }, orderBy: { publicadoEn: "desc" }, take: 4,
+      });
+    }
   } catch {}
 
   if (novedades.length === 0) return null;

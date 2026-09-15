@@ -10,19 +10,20 @@ type NovedadFormValues = {
   galeria?: string[];
   videoUrl?: string | null;
   publicada?: boolean;
+  destacadaHome?: boolean;
   archivos?: { id: string; nombre: string; url: string }[];
 };
-
-const CATEGORIAS = ["Institucional", "Sede Santa Fe", "Delegación Rafaela", "Delegación Reconquista"];
 
 export function NovedadForm({
   action,
   defaultValues,
   submitLabel,
+  categorias,
 }: {
   action: (formData: FormData) => void;
   defaultValues?: NovedadFormValues;
   submitLabel: string;
+  categorias: string[];
 }) {
   const galeria = defaultValues?.galeria ?? [];
   const archivos = defaultValues?.archivos ?? [];
@@ -45,8 +46,8 @@ export function NovedadForm({
 
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <Field label="Categoría">
-              <Select name="categoria" defaultValue={defaultValues?.categoria ?? "Institucional"}>
-                {CATEGORIAS.map((c) => <option key={c} value={c}>{c}</option>)}
+              <Select name="categoria" defaultValue={defaultValues?.categoria ?? categorias[0]}>
+                {categorias.map((c) => <option key={c} value={c}>{c}</option>)}
               </Select>
             </Field>
 
@@ -80,6 +81,21 @@ export function NovedadForm({
               <span className="text-sm font-medium text-slate-700">Publicada</span>
             </label>
             <p className="mt-2 text-xs text-slate-400">Si está apagada, la novedad queda guardada pero no es visible en el sitio.</p>
+
+            <label className="mt-5 flex cursor-pointer items-center gap-3">
+              <span className="relative inline-flex h-6 w-11 shrink-0 items-center">
+                <input
+                  type="checkbox"
+                  name="destacadaHome"
+                  defaultChecked={defaultValues?.destacadaHome ?? false}
+                  className="peer sr-only"
+                />
+                <span className="absolute inset-0 rounded-full bg-slate-300 transition peer-checked:bg-cpe-gold" />
+                <span className="absolute left-0.5 h-5 w-5 rounded-full bg-white shadow transition peer-checked:translate-x-5" />
+              </span>
+              <span className="text-sm font-medium text-slate-700">Destacada en portada</span>
+            </label>
+            <p className="mt-2 text-xs text-slate-400">Marcá hasta 4 novedades para que aparezcan en el home. Si ninguna está marcada, se muestran las 4 más recientes.</p>
           </Card>
         </div>
       </div>
