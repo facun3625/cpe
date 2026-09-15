@@ -37,6 +37,27 @@ async function main() {
   }
   console.log(`Novedades seedeadas: ${novedades.length}`);
 
+  const categoriasNovedades = [
+    "Delegación Santa Fe",
+    "Delegación Rafaela",
+    "Delegación Reconquista",
+    "Artículos de Interés",
+    "Novedades",
+    "Biblioteca",
+    "Portada",
+    "Publicación Destacada",
+    "Recipes",
+    "Sin categoría",
+  ];
+  for (let i = 0; i < categoriasNovedades.length; i++) {
+    await prisma.novedadCategoria.upsert({
+      where: { nombre: categoriasNovedades[i] },
+      update: {},
+      create: { nombre: categoriasNovedades[i], orden: i },
+    });
+  }
+  console.log(`NovedadCategoria: ${categoriasNovedades.length} categorías aseguradas.`);
+
   // --- Misión, visión y propósitos ---
   await prisma.paginaTexto.upsert({
     where: { pagina: "mision" },
