@@ -13,6 +13,7 @@ function LoginForm() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [recordar, setRecordar] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -20,6 +21,7 @@ function LoginForm() {
     try {
       const guardado = localStorage.getItem(EMAIL_GUARDADO_KEY);
       if (guardado) setEmail(guardado);
+      else setRecordar(true);
     } catch {}
   }, []);
 
@@ -42,7 +44,8 @@ function LoginForm() {
     }
 
     try {
-      localStorage.setItem(EMAIL_GUARDADO_KEY, email);
+      if (recordar) localStorage.setItem(EMAIL_GUARDADO_KEY, email);
+      else localStorage.removeItem(EMAIL_GUARDADO_KEY);
     } catch {}
 
     router.push(callbackUrl);
@@ -94,6 +97,16 @@ function LoginForm() {
             className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
           />
         </div>
+
+        <label className="flex cursor-pointer items-center gap-2 text-sm text-gray-600">
+          <input
+            type="checkbox"
+            checked={recordar}
+            onChange={(e) => setRecordar(e.target.checked)}
+            className="h-4 w-4 cursor-pointer rounded border-gray-300 text-gray-900 focus:ring-gray-500"
+          />
+          Recordar mi usuario
+        </label>
 
         <button
           type="submit"
