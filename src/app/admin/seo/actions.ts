@@ -31,7 +31,7 @@ export async function guardarSeo(formData: FormData) {
     twitterHandle: string | null;
     verificacionGoogle: string | null;
     verificacionBing: string | null;
-    imagenOg?: string;
+    imagenOg?: string | null;
   } = {
     titulo,
     descripcion,
@@ -42,6 +42,8 @@ export async function guardarSeo(formData: FormData) {
   };
   if (imagen && imagen.size > 0) {
     data.imagenOg = await saveUploadedFile(imagen, "seo");
+  } else if (formData.get("imagenOgEliminar") === "1") {
+    data.imagenOg = null;
   }
 
   await prisma.seoConfig.upsert({

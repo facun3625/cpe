@@ -59,11 +59,13 @@ export async function updatePost(id: string, formData: FormData) {
     bajada: string;
     publicado: boolean;
     orden: number;
-    portadaUrl?: string;
+    portadaUrl?: string | null;
     archivoUrl?: string;
   } = { categoriaId, titulo, bajada, publicado, orden };
 
   if (portada && portada.size > 0) data.portadaUrl = await saveUploadedFile(portada, "biblioteca/portadas");
+  else if (formData.get("portadaEliminar") === "1") data.portadaUrl = null;
+
   if (archivo && archivo.size > 0) data.archivoUrl = await saveUploadedFile(archivo, "biblioteca/archivos");
 
   await prisma.bibliotecaPost.update({ where: { id }, data });

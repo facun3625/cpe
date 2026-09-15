@@ -128,7 +128,7 @@ export async function updateNovedad(id: string, formData: FormData) {
     destacadaHome: boolean;
     videoUrl: string | null;
     galeria: string[];
-    imagenUrl?: string;
+    imagenUrl?: string | null;
   } = {
     titulo,
     resumen,
@@ -141,6 +141,8 @@ export async function updateNovedad(id: string, formData: FormData) {
   };
   if (imagen && imagen.size > 0) {
     data.imagenUrl = await saveUploadedFile(imagen, "novedades");
+  } else if (formData.get("imagenEliminar") === "1") {
+    data.imagenUrl = null;
   }
 
   if (archivosEliminar.length > 0) {

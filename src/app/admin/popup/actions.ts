@@ -30,7 +30,7 @@ export async function guardarPopup(formData: FormData) {
     texto: string | null;
     videoUrl: string | null;
     mostrarSiempre: boolean;
-    imagenUrl?: string;
+    imagenUrl?: string | null;
   } = {
     activo,
     tipo,
@@ -41,6 +41,8 @@ export async function guardarPopup(formData: FormData) {
   };
   if (imagen && imagen.size > 0) {
     data.imagenUrl = await saveUploadedFile(imagen, "popup");
+  } else if (formData.get("imagenEliminar") === "1") {
+    data.imagenUrl = null;
   }
 
   await prisma.popupConfig.upsert({

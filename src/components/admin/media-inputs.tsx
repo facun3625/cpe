@@ -12,40 +12,65 @@ function IconImage() {
   );
 }
 
-/** Input de imagen única con preview de la existente o de la que se elige. */
+/** Input de imagen única con preview de la existente o de la que se elige.
+ * Si se quita la imagen (sin elegir una nueva), manda un input oculto
+ * `${name}Eliminar=1` para que la acción del servidor sepa que hay que
+ * limpiar la URL guardada en vez de dejarla como estaba. */
 export function ImagenPortadaInput({ name, defaultUrl }: { name: string; defaultUrl?: string | null }) {
   const [preview, setPreview] = useState<string | null>(defaultUrl ?? null);
+  const [eliminar, setEliminar] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   function onChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     setPreview(URL.createObjectURL(file));
+    setEliminar(false);
+  }
+
+  function quitar() {
+    setPreview(null);
+    setEliminar(true);
+    if (inputRef.current) inputRef.current.value = "";
   }
 
   return (
     <div>
       <input ref={inputRef} type="file" name={name} accept="image/*" onChange={onChange} className="hidden" />
-      <button
-        type="button"
-        onClick={() => inputRef.current?.click()}
-        className="group relative block aspect-[16/10] w-full cursor-pointer overflow-hidden rounded-2xl border border-dashed border-slate-300 bg-slate-50 transition hover:border-cpe-royal/40"
-      >
+      {eliminar && <input type="hidden" name={`${name}Eliminar`} value="1" />}
+      <div className="group relative block aspect-[16/10] w-full overflow-hidden rounded-2xl border border-dashed border-slate-300 bg-slate-50 transition hover:border-cpe-royal/40">
         {preview ? (
           <>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={preview} alt="" className="h-full w-full object-cover" />
-            <div className="absolute inset-0 flex items-center justify-center bg-cpe-navy/0 opacity-0 transition group-hover:bg-cpe-navy/55 group-hover:opacity-100">
+            <button
+              type="button"
+              onClick={() => inputRef.current?.click()}
+              className="absolute inset-0 flex cursor-pointer items-center justify-center bg-cpe-navy/0 opacity-0 transition group-hover:bg-cpe-navy/55 group-hover:opacity-100"
+            >
               <span className="rounded-full bg-white px-4 py-2 text-xs font-semibold text-cpe-navy shadow">Cambiar imagen</span>
-            </div>
+            </button>
+            <button
+              type="button"
+              onClick={quitar}
+              aria-label="Quitar imagen"
+              title="Quitar imagen"
+              className="absolute right-3 top-3 grid h-8 w-8 cursor-pointer place-items-center rounded-full bg-white/90 text-slate-500 shadow transition hover:bg-white hover:text-red-600"
+            >
+              ×
+            </button>
           </>
         ) : (
-          <div className="flex h-full flex-col items-center justify-center gap-2 text-slate-400">
+          <button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            className="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-2 text-slate-400"
+          >
             <IconImage />
             <span className="text-xs font-semibold">Subir imagen de portada</span>
-          </div>
+          </button>
         )}
-      </button>
+      </div>
     </div>
   );
 }
