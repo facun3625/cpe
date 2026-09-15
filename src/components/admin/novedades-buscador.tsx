@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState, useTransition } from "react";
 import { AdminTable } from "@/components/admin/fields";
+import { ConfirmDialog } from "@/components/admin/confirm-dialog";
 
 type NovedadRow = {
   id: string;
@@ -41,6 +42,7 @@ export function NovedadesBuscador({
   const [categoria, setCategoria] = useState<string>("TODAS");
   const [query, setQuery] = useState("");
   const [, startTransition] = useTransition();
+  const [aBorrar, setABorrar] = useState<{ id: string; titulo: string } | null>(null);
 
   const conteosPorCategoria = useMemo(() => {
     const conteo: Record<string, number> = { TODAS: items.length };
@@ -67,8 +69,10 @@ export function NovedadesBuscador({
     });
   }
 
-  function handleDelete(id: string, titulo: string) {
-    if (!window.confirm(`¿Eliminar "${titulo}"? Esta acción no se puede deshacer.`)) return;
+  function confirmarBorrado() {
+    if (!aBorrar) return;
+    const { id } = aBorrar;
+    setABorrar(null);
     setItems((prev) => prev.filter((n) => n.id !== id));
     startTransition(() => {
       deleteAction(id);
@@ -141,7 +145,7 @@ export function NovedadesBuscador({
                 <Link href={`/admin/novedades/${n.id}`} className="text-sm font-medium text-cpe-blue hover:underline">
                   Editar
                 </Link>
-                <button type="button" onClick={() => handleDelete(n.id, n.titulo)} className="cursor-pointer text-sm font-medium text-red-600 hover:underline">
+                <button type="button" onClick={() => setABorrar({ id: n.id, titulo: n.titulo })} className="cursor-pointer text-sm font-medium text-red-600 hover:underline">
                   Eliminar
                 </button>
               </div>
@@ -149,6 +153,14 @@ export function NovedadesBuscador({
           </tr>
         ))}
       </AdminTable>
+
+      <ConfirmDialog
+        open={aBorrar !== null}
+        title="Eliminar novedad"
+        message={aBorrar ? `¿Eliminar "${aBorrar.titulo}"? Esta acción no se puede deshacer.` : ""}
+        onConfirm={confirmarBorrado}
+        onCancel={() => setABorrar(null)}
+      />
     </div>
   );
 }

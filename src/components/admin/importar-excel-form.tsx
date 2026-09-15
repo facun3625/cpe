@@ -3,6 +3,7 @@
 import { useActionState, useRef, useState } from "react";
 import type { ImportResultado } from "@/app/admin/matriculados/actions";
 import { Card } from "@/components/admin/fields";
+import { ConfirmDialog } from "@/components/admin/confirm-dialog";
 
 const ESTADO_INICIAL: ImportResultado | null = null;
 
@@ -46,15 +47,18 @@ export function ImportarExcelForm({ action }: { action: (formData: FormData) => 
   );
   const [file, setFile] = useState<File | null>(null);
   const [modo, setModo] = useState<"agregar" | "reemplazar">("agregar");
+  const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    if (modo === "reemplazar") {
-      const ok = window.confirm(
-        "Modo Reemplazar: se van a BORRAR todos los matriculados que no estén en este archivo. Esta acción no se puede deshacer. ¿Confirmás?"
-      );
-      if (!ok) e.preventDefault();
-    }
+  function handleSubmitClick() {
+    if (modo === "reemplazar") setMostrarConfirmacion(true);
+    else formRef.current?.requestSubmit();
+  }
+
+  function confirmarYEnviar() {
+    setMostrarConfirmacion(false);
+    formRef.current?.requestSubmit();
   }
 
   return (
@@ -96,7 +100,7 @@ export function ImportarExcelForm({ action }: { action: (formData: FormData) => 
         </p>
       )}
 
-      <form action={formAction} onSubmit={handleSubmit} className="mt-4 flex flex-wrap items-center gap-3">
+      <form ref={formRef} action={formAction} className="mt-4 flex flex-wrap items-center gap-3">
         <input type="hidden" name="modo" value={modo} />
         <input
           ref={inputRef}
@@ -142,13 +146,23 @@ export function ImportarExcelForm({ action }: { action: (formData: FormData) => 
         )}
 
         <button
-          type="submit"
+          type="button"
+          onClick={handleSubmitClick}
           disabled={pending || !file}
           className="ml-auto cursor-pointer rounded-xl bg-cpe-coral px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-cpe-coral-dark hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
         >
           {pending ? "Importando…" : "Importar"}
         </button>
       </form>
+
+      <ConfirmDialog
+        open={mostrarConfirmacion}
+        title="Reemplazar todo el padrón"
+        message="Se van a BORRAR todos los matriculados que no estén en este archivo. Esta acción no se puede deshacer."
+        confirmLabel="Sí, reemplazar"
+        onConfirm={confirmarYEnviar}
+        onCancel={() => setMostrarConfirmacion(false)}
+      />
 
       {resultado && (
         <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-5">
