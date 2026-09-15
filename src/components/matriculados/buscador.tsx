@@ -25,6 +25,14 @@ const NIVEL_STYLES: Record<Nivel, string> = {
   AUXILIAR: "bg-cpe-coral text-white",
 };
 
+const NIVEL_ORDEN: Record<Nivel, number> = {
+  LICENCIADO: 0,
+  ENFERMERO: 1,
+  AUXILIAR: 2,
+};
+
+type Orden = "apellido" | "especialidad";
+
 function normalizar(texto: string) {
   return texto.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 }
@@ -43,22 +51,35 @@ const POR_PAGINA = 50;
 export function BuscadorMatriculados({ matriculados, initialQuery }: { matriculados: Matriculado[]; initialQuery?: string }) {
   const [query, setQuery] = useState(initialQuery ?? "");
   const [pagina, setPagina] = useState(1);
+  const [orden, setOrden] = useState<Orden>("apellido");
 
   const resultados = useMemo(() => {
     const q = normalizar(query.trim());
-    if (!q) return matriculados;
+    let lista = matriculados;
 
-    const tokens = q.replace(/,/g, " ").split(/\s+/).filter(Boolean);
-    const soloDigitos = q.replace(/\D/g, "");
+    if (q) {
+      const tokens = q.replace(/,/g, " ").split(/\s+/).filter(Boolean);
+      const soloDigitos = q.replace(/\D/g, "");
 
-    return matriculados.filter((m) => {
-      const nombreCompleto = normalizar(`${m.apellido} ${m.nombre}`);
-      const coincideNombre = tokens.every((t) => nombreCompleto.includes(t));
-      const coincideDni = soloDigitos.length > 0 && m.dni.replace(/\./g, "").includes(soloDigitos);
-      const coincideMatricula = normalizar(m.matricula).includes(q);
-      return coincideNombre || coincideDni || coincideMatricula;
-    });
-  }, [matriculados, query]);
+      lista = matriculados.filter((m) => {
+        const nombreCompleto = normalizar(`${m.apellido} ${m.nombre}`);
+        const coincideNombre = tokens.every((t) => nombreCompleto.includes(t));
+        const coincideDni = soloDigitos.length > 0 && m.dni.replace(/\./g, "").includes(soloDigitos);
+        const coincideMatricula = normalizar(m.matricula).includes(q);
+        return coincideNombre || coincideDni || coincideMatricula;
+      });
+    }
+
+    if (orden === "especialidad") {
+      lista = [...lista].sort((a, b) => {
+        const diff = NIVEL_ORDEN[a.nivel] - NIVEL_ORDEN[b.nivel];
+        if (diff !== 0) return diff;
+        return normalizar(a.apellido).localeCompare(normalizar(b.apellido));
+      });
+    }
+
+    return lista;
+  }, [matriculados, query, orden]);
 
   const totalPaginas = Math.max(1, Math.ceil(resultados.length / POR_PAGINA));
   const paginaActual = Math.min(pagina, totalPaginas);
@@ -69,17 +90,32 @@ export function BuscadorMatriculados({ matriculados, initialQuery }: { matricula
     setPagina(1);
   }
 
+  function handleOrden(value: Orden) {
+    setOrden(value);
+    setPagina(1);
+  }
+
   return (
     <div>
-      <div className="relative">
-        <span className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2"><IconSearch /></span>
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => handleQuery(e.target.value)}
-          placeholder="Buscá por apellido, nombre, DNI o matrícula…"
-          className="min-h-14 w-full rounded-full border border-slate-200 bg-white pl-14 pr-5 text-sm text-cpe-navy shadow-sm outline-none transition focus:border-cpe-royal focus:ring-4 focus:ring-cpe-royal/10"
-        />
+      <div className="flex flex-col gap-3 sm:flex-row">
+        <div className="relative flex-1">
+          <span className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2"><IconSearch /></span>
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => handleQuery(e.target.value)}
+            placeholder="Buscá por apellido, nombre, DNI o matrícula…"
+            className="min-h-14 w-full rounded-full border border-slate-200 bg-white pl-14 pr-5 text-sm text-cpe-navy shadow-sm outline-none transition focus:border-cpe-royal focus:ring-4 focus:ring-cpe-royal/10"
+          />
+        </div>
+        <select
+          value={orden}
+          onChange={(e) => handleOrden(e.target.value as Orden)}
+          className="min-h-14 cursor-pointer rounded-full border border-slate-200 bg-white px-5 text-sm text-cpe-navy shadow-sm outline-none transition focus:border-cpe-royal focus:ring-4 focus:ring-cpe-royal/10 sm:w-64"
+        >
+          <option value="apellido">Ordenar por apellido</option>
+          <option value="especialidad">Ordenar por especialidad</option>
+        </select>
       </div>
 
       <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">
