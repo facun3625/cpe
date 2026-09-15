@@ -107,14 +107,14 @@ export function SiteHeader({ novedadCategorias = [] }: { novedadCategorias?: str
                   <span className={`text-[10px] transition-transform ${isOpen ? "rotate-180" : ""}`} aria-hidden>▾</span>
                 </button>
                 <div
-                  className={`absolute top-full z-20 min-w-[190px] origin-top rounded-2xl bg-white px-1 py-3 shadow-2xl transition-all duration-[400ms] ease-in-out ${link.align === "right" ? "right-0" : "left-0"} ${isOpen ? "translate-y-2 scale-100 opacity-100" : "pointer-events-none translate-y-0 scale-95 opacity-0"}`}
+                  className={`absolute top-full z-20 w-max min-w-[190px] max-w-[280px] origin-top rounded-2xl bg-white px-1 py-3 shadow-2xl transition-all duration-[400ms] ease-in-out ${link.align === "right" ? "right-0" : "left-0"} ${isOpen ? "translate-y-2 scale-100 opacity-100" : "pointer-events-none translate-y-0 scale-95 opacity-0"}`}
                 >
                   {link.children.map((child) => (
                     <Link
                       key={child.href}
                       href={child.href}
                       onClick={() => setDesktopOpen(null)}
-                      className="block cursor-pointer rounded-xl px-3.5 py-0.5 text-[13px] font-normal text-slate-600 transition hover:text-cpe-royal"
+                      className="block cursor-pointer whitespace-nowrap rounded-xl px-3.5 py-0.5 text-[13px] font-normal text-slate-600 transition hover:text-cpe-royal"
                     >
                       {child.label}
                     </Link>
