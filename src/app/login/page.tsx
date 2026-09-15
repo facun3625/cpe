@@ -1,8 +1,10 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
+
+const EMAIL_GUARDADO_KEY = "cpe-admin-email";
 
 function LoginForm() {
   const router = useRouter();
@@ -13,6 +15,13 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    try {
+      const guardado = localStorage.getItem(EMAIL_GUARDADO_KEY);
+      if (guardado) setEmail(guardado);
+    } catch {}
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +40,10 @@ function LoginForm() {
       setError("Email o contraseña incorrectos");
       return;
     }
+
+    try {
+      localStorage.setItem(EMAIL_GUARDADO_KEY, email);
+    } catch {}
 
     router.push(callbackUrl);
     router.refresh();
