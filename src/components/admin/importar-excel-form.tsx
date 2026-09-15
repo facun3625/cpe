@@ -45,12 +45,22 @@ export function ImportarExcelForm({ action }: { action: (formData: FormData) => 
     ESTADO_INICIAL
   );
   const [file, setFile] = useState<File | null>(null);
+  const [modo, setModo] = useState<"agregar" | "reemplazar">("agregar");
   const inputRef = useRef<HTMLInputElement>(null);
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    if (modo === "reemplazar") {
+      const ok = window.confirm(
+        "Modo Reemplazar: se van a BORRAR todos los matriculados que no estén en este archivo. Esta acción no se puede deshacer. ¿Confirmás?"
+      );
+      if (!ok) e.preventDefault();
+    }
+  }
 
   return (
     <Card
       title="Importar padrón desde Excel o CSV"
-      hint="Columnas esperadas: Apellido, Nombre, DNI, Matrícula, Nivel. Actualiza por DNI a los que ya existen y agrega los nuevos — no borra a nadie que falte en el archivo. Acepta cualquier versión de Excel (.xls, .xlsx) y también CSV."
+      hint="Columnas esperadas: Apellido, Nombre, DNI, Matrícula, Nivel. Acepta cualquier versión de Excel (.xls, .xlsx) y también CSV."
       action={
         <a
           href="/plantillas/matriculados-plantilla.xlsx"
@@ -61,7 +71,33 @@ export function ImportarExcelForm({ action }: { action: (formData: FormData) => 
         </a>
       }
     >
-      <form action={formAction} className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-wrap items-center gap-2 border-b border-slate-100 pb-4">
+        <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">Al importar:</span>
+        <div className="flex gap-2 rounded-full border border-slate-200 bg-white p-1">
+          <button
+            type="button"
+            onClick={() => setModo("agregar")}
+            className={`cursor-pointer whitespace-nowrap rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${modo === "agregar" ? "bg-cpe-navy text-white" : "text-slate-500 hover:text-cpe-navy"}`}
+          >
+            Agregar y actualizar
+          </button>
+          <button
+            type="button"
+            onClick={() => setModo("reemplazar")}
+            className={`cursor-pointer whitespace-nowrap rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${modo === "reemplazar" ? "bg-red-600 text-white" : "text-slate-500 hover:text-red-600"}`}
+          >
+            Reemplazar todo el padrón
+          </button>
+        </div>
+      </div>
+      {modo === "reemplazar" && (
+        <p className="mt-3 rounded-xl bg-red-50 px-4 py-2.5 text-xs font-medium text-red-700">
+          ⚠ Se van a borrar todos los matriculados que no estén en el archivo que subas. No se puede deshacer.
+        </p>
+      )}
+
+      <form action={formAction} onSubmit={handleSubmit} className="mt-4 flex flex-wrap items-center gap-3">
+        <input type="hidden" name="modo" value={modo} />
         <input
           ref={inputRef}
           type="file"
@@ -119,6 +155,9 @@ export function ImportarExcelForm({ action }: { action: (formData: FormData) => 
           <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">{resultado.creados} creados</span>
           <span className="rounded-full bg-cpe-royal/10 px-3 py-1 text-xs font-bold text-cpe-royal">{resultado.actualizados} actualizados</span>
           <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-500">{resultado.omitidos} omitidos</span>
+          {resultado.eliminados > 0 && (
+            <span className="rounded-full bg-red-50 px-3 py-1 text-xs font-bold text-red-700">{resultado.eliminados} eliminados</span>
+          )}
           {resultado.errores.length > 0 && (
             <ul className="mt-2 w-full list-disc space-y-1 pl-5 text-xs text-red-600">
               {resultado.errores.map((e) => <li key={e}>{e}</li>)}

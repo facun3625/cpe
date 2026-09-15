@@ -108,14 +108,23 @@ export function BuscadorMatriculados({ matriculados, initialQuery }: { matricula
             className="min-h-14 w-full rounded-full border border-slate-200 bg-white pl-14 pr-5 text-sm text-cpe-navy shadow-sm outline-none transition focus:border-cpe-royal focus:ring-4 focus:ring-cpe-royal/10"
           />
         </div>
-        <select
-          value={orden}
-          onChange={(e) => handleOrden(e.target.value as Orden)}
-          className="min-h-14 cursor-pointer rounded-full border border-slate-200 bg-white px-5 text-sm text-cpe-navy shadow-sm outline-none transition focus:border-cpe-royal focus:ring-4 focus:ring-cpe-royal/10 sm:w-64"
-        >
-          <option value="apellido">Ordenar por apellido</option>
-          <option value="especialidad">Ordenar por especialidad</option>
-        </select>
+        <div className="flex shrink-0 items-center gap-2 rounded-full border border-slate-200 bg-white p-1.5 shadow-sm">
+          <span className="hidden pl-2 text-xs font-semibold uppercase tracking-wide text-slate-400 sm:inline">Ordenar</span>
+          <button
+            type="button"
+            onClick={() => handleOrden("apellido")}
+            className={`min-h-11 cursor-pointer whitespace-nowrap rounded-full px-4 text-sm font-semibold transition ${orden === "apellido" ? "bg-cpe-navy text-white" : "text-slate-500 hover:text-cpe-navy"}`}
+          >
+            Apellido
+          </button>
+          <button
+            type="button"
+            onClick={() => handleOrden("especialidad")}
+            className={`min-h-11 cursor-pointer whitespace-nowrap rounded-full px-4 text-sm font-semibold transition ${orden === "especialidad" ? "bg-cpe-navy text-white" : "text-slate-500 hover:text-cpe-navy"}`}
+          >
+            Especialidad
+          </button>
+        </div>
       </div>
 
       <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">

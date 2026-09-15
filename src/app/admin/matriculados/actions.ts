@@ -66,14 +66,15 @@ export async function deleteMatriculado(id: string) {
   revalidatePath("/admin/matriculados");
 }
 
-export type ImportResultado = { creados: number; actualizados: number; omitidos: number; errores: string[] };
+export type ImportResultado = { creados: number; actualizados: number; omitidos: number; eliminados: number; errores: string[] };
 
 export async function importarMatriculadosExcel(formData: FormData): Promise<ImportResultado> {
   await requireSession();
 
+  const modo = String(formData.get("modo") ?? "agregar");
   const archivo = formData.get("archivo") as File | null;
   if (!archivo || archivo.size === 0) {
-    return { creados: 0, actualizados: 0, omitidos: 0, errores: ["No se recibió ningún archivo."] };
+    return { creados: 0, actualizados: 0, omitidos: 0, eliminados: 0, errores: ["No se recibió ningún archivo."] };
   }
 
   const buffer = Buffer.from(await archivo.arrayBuffer());
@@ -89,13 +90,14 @@ export async function importarMatriculadosExcel(formData: FormData): Promise<Imp
       creados: 0,
       actualizados: 0,
       omitidos: 0,
+      eliminados: 0,
       errores: ["No se pudo leer el archivo. Verificá que sea una planilla Excel (.xls/.xlsx) o CSV válida."],
     };
   }
 
   const hoja = libro.Sheets[libro.SheetNames[0]];
   if (!hoja) {
-    return { creados: 0, actualizados: 0, omitidos: 0, errores: ["El archivo no tiene ninguna hoja con datos."] };
+    return { creados: 0, actualizados: 0, omitidos: 0, eliminados: 0, errores: ["El archivo no tiene ninguna hoja con datos."] };
   }
   const filas = XLSX.utils.sheet_to_json<Record<string, unknown>>(hoja, { defval: "" });
 
@@ -103,6 +105,7 @@ export async function importarMatriculadosExcel(formData: FormData): Promise<Imp
   let actualizados = 0;
   let omitidos = 0;
   const errores: string[] = [];
+  const dnisDelArchivo = new Set<string>();
 
   for (const [index, filaCruda] of filas.entries()) {
     const fila: Record<string, unknown> = {};
@@ -121,6 +124,7 @@ export async function importarMatriculadosExcel(formData: FormData): Promise<Imp
     }
 
     const nivel = detectarNivel(nivelTexto);
+    dnisDelArchivo.add(dni);
 
     const existente = await prisma.matriculado.findUnique({ where: { dni } });
     if (existente) {
@@ -132,8 +136,14 @@ export async function importarMatriculadosExcel(formData: FormData): Promise<Imp
     }
   }
 
+  let eliminados = 0;
+  if (modo === "reemplazar" && dnisDelArchivo.size > 0) {
+    const { count } = await prisma.matriculado.deleteMany({ where: { dni: { notIn: Array.from(dnisDelArchivo) } } });
+    eliminados = count;
+  }
+
   revalidatePath("/matriculados");
   revalidatePath("/admin/matriculados");
 
-  return { creados, actualizados, omitidos, errores: errores.slice(0, 20) };
+  return { creados, actualizados, omitidos, eliminados, errores: errores.slice(0, 20) };
 }
