@@ -21,14 +21,20 @@ function formatFecha(date: Date) {
 export function NovedadCard({ novedad }: { novedad: Novedad }) {
   return (
     <article className="group flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition hover:shadow-md">
-      <div className="relative h-36 overflow-hidden bg-cpe-navy">
-        <Image
-          src={novedad.imagenUrl || `https://picsum.photos/seed/${novedad.slug}/480/320`}
-          alt=""
-          fill
-          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-          className="object-cover transition duration-500 group-hover:scale-105"
-        />
+      <div className="relative h-36 overflow-hidden bg-gradient-to-br from-cpe-navy to-cpe-royal">
+        {novedad.imagenUrl ? (
+          <Image
+            src={novedad.imagenUrl}
+            alt=""
+            fill
+            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+            className="object-cover transition duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Image src="/cpe-seal.png" alt="" width={80} height={80} className="opacity-90 transition duration-500 group-hover:scale-105" />
+          </div>
+        )}
         <span className="absolute left-3 top-3 rounded bg-cpe-royal px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
           {novedad.categoria}
         </span>
