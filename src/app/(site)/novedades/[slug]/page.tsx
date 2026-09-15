@@ -32,12 +32,12 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
   return (
     <article className="bg-cpe-bg">
-      <header className="bg-cpe-navy py-14 text-white sm:py-20">
+      <header className="bg-cpe-navy py-7 text-white sm:py-9">
         <div className="mx-auto max-w-2xl px-5 sm:px-8">
           <Link href="/novedades" className="text-xs font-bold uppercase tracking-widest text-cpe-mint">← Volver a novedades</Link>
-          <p className="mt-8 text-xs font-bold uppercase tracking-[.2em] text-cpe-gold">{n.categoria}</p>
-          <h1 className="mt-4 font-display text-3xl font-semibold leading-tight sm:text-4xl">{n.titulo}</h1>
-          <p className="mt-5 text-sm text-white/60">{formatFecha(n.publicadoEn)}</p>
+          <p className="mt-4 text-xs font-bold uppercase tracking-[.2em] text-cpe-gold">{n.categoria}</p>
+          <h1 className="mt-2 font-display text-xl font-semibold leading-tight sm:text-2xl">{n.titulo}</h1>
+          <p className="mt-2 text-sm text-white/60">{formatFecha(n.publicadoEn)}</p>
         </div>
       </header>
 
