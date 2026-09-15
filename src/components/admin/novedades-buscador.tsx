@@ -67,6 +67,14 @@ export function NovedadesBuscador({
     });
   }
 
+  function handleDelete(id: string, titulo: string) {
+    if (!window.confirm(`¿Eliminar "${titulo}"? Esta acción no se puede deshacer.`)) return;
+    setItems((prev) => prev.filter((n) => n.id !== id));
+    startTransition(() => {
+      deleteAction(id);
+    });
+  }
+
   function pillClass(active: boolean) {
     return `cursor-pointer rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wide transition ${
       active ? "bg-cpe-navy text-white" : "border border-slate-200 bg-white text-slate-500 hover:border-cpe-navy/30 hover:text-cpe-navy"
@@ -133,11 +141,9 @@ export function NovedadesBuscador({
                 <Link href={`/admin/novedades/${n.id}`} className="text-sm font-medium text-cpe-blue hover:underline">
                   Editar
                 </Link>
-                <form action={deleteAction.bind(null, n.id)}>
-                  <button type="submit" className="text-sm font-medium text-red-600 hover:underline">
-                    Eliminar
-                  </button>
-                </form>
+                <button type="button" onClick={() => handleDelete(n.id, n.titulo)} className="cursor-pointer text-sm font-medium text-red-600 hover:underline">
+                  Eliminar
+                </button>
               </div>
             </td>
           </tr>
