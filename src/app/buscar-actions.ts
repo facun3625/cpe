@@ -41,8 +41,10 @@ function normalizar(texto: string) {
 }
 
 function coincide(q: string, ...campos: (string | null | undefined)[]) {
-  const nq = normalizar(q);
-  return campos.some((c) => c && normalizar(c).includes(nq));
+  const tokens = normalizar(q).replace(/,/g, " ").split(/\s+/).filter(Boolean);
+  if (tokens.length === 0) return false;
+  const combinado = normalizar(campos.filter(Boolean).join(" "));
+  return tokens.every((t) => combinado.includes(t));
 }
 
 export async function buscarGlobal(query: string): Promise<ResultadoBusqueda[]> {

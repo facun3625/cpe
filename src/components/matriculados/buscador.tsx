@@ -47,12 +47,17 @@ export function BuscadorMatriculados({ matriculados, initialQuery }: { matricula
   const resultados = useMemo(() => {
     const q = normalizar(query.trim());
     if (!q) return matriculados;
-    return matriculados.filter((m) =>
-      normalizar(m.apellido).includes(q) ||
-      normalizar(m.nombre).includes(q) ||
-      m.dni.replace(/\./g, "").includes(q.replace(/\./g, "")) ||
-      m.matricula.includes(q)
-    );
+
+    const tokens = q.replace(/,/g, " ").split(/\s+/).filter(Boolean);
+    const soloDigitos = q.replace(/\D/g, "");
+
+    return matriculados.filter((m) => {
+      const nombreCompleto = normalizar(`${m.apellido} ${m.nombre}`);
+      const coincideNombre = tokens.every((t) => nombreCompleto.includes(t));
+      const coincideDni = soloDigitos.length > 0 && m.dni.replace(/\./g, "").includes(soloDigitos);
+      const coincideMatricula = normalizar(m.matricula).includes(q);
+      return coincideNombre || coincideDni || coincideMatricula;
+    });
   }, [matriculados, query]);
 
   const totalPaginas = Math.max(1, Math.ceil(resultados.length / POR_PAGINA));
