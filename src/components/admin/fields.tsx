@@ -1,3 +1,5 @@
+import { DeleteButton } from "@/components/admin/delete-button";
+
 export function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
     <div>
@@ -100,13 +102,19 @@ export function AdminTable({ head, children, empty }: { head: string[]; children
   );
 }
 
-export function RowActions({ editHref, deleteAction }: { editHref?: string; deleteAction: () => void }) {
+export function RowActions({
+  editHref,
+  deleteAction,
+  confirmMessage = "¿Eliminar este elemento? Esta acción no se puede deshacer.",
+}: {
+  editHref?: string;
+  deleteAction: () => void;
+  confirmMessage?: string;
+}) {
   return (
     <div className="flex justify-end gap-4">
       {editHref && <a href={editHref} className="text-sm font-medium text-cpe-blue hover:underline">Editar</a>}
-      <form action={deleteAction}>
-        <button type="submit" className="cursor-pointer text-sm font-medium text-red-500 hover:text-red-600 hover:underline">Eliminar</button>
-      </form>
+      <DeleteButton action={deleteAction} confirmMessage={confirmMessage} />
     </div>
   );
 }
