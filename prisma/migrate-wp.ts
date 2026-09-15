@@ -3,8 +3,11 @@
  * (cpesantafe.com.ar) a la tabla Novedad, vía la REST API pública de WP.
  * Idempotente: si una novedad con el mismo slug ya existe, se saltea.
  *
- * Correr con: npx tsx prisma/migrate-wp.ts [cantidad]
- * Por defecto trae las últimas 4. Ej: npx tsx prisma/migrate-wp.ts 10
+ * Correr con: npx tsx prisma/migrate-wp.ts [cantidad] ["Nombre de categoría WP"]
+ * Por defecto trae las últimas 4, de cualquier categoría. Ejemplos:
+ *   npx tsx prisma/migrate-wp.ts 10
+ *   npx tsx prisma/migrate-wp.ts 20 "Delegación Santa Fe"
+ *   npx tsx prisma/migrate-wp.ts 20 "Delegación Rafaela"
  */
 import { PrismaClient } from "@prisma/client";
 import { randomUUID } from "crypto";
@@ -16,6 +19,7 @@ const prisma = new PrismaClient();
 const WP_BASE = "https://cpesantafe.com.ar/wp-json/wp/v2";
 const UPLOADS_DIR = path.join(process.cwd(), "public", "uploads", "novedades");
 const CANTIDAD = Number(process.argv[2] ?? 4) || 4;
+const CATEGORIA_FILTRO = process.argv[3]?.trim();
 
 const CATEGORIAS_DELEGACION = ["Delegación Santa Fe", "Delegación Rafaela", "Delegación Reconquista"];
 const CATEGORIA_DEFAULT = "Artículos de Interés";
@@ -93,10 +97,21 @@ async function descargarImagen(url: string): Promise<string | null> {
 async function main() {
   await mkdir(UPLOADS_DIR, { recursive: true });
 
-  console.log(`Trayendo las últimas ${CANTIDAD} novedades de WordPress...`);
-  const res = await fetch(`${WP_BASE}/posts?per_page=${CANTIDAD}&_embed=1`, {
-    headers: { "User-Agent": "Mozilla/5.0" },
-  });
+  let categoriaId: number | null = null;
+  if (CATEGORIA_FILTRO) {
+    const resCat = await fetch(`${WP_BASE}/categories?search=${encodeURIComponent(CATEGORIA_FILTRO)}&per_page=10`, {
+      headers: { "User-Agent": "Mozilla/5.0" },
+    });
+    const categorias: { id: number; name: string }[] = await resCat.json();
+    const match = categorias.find((c) => c.name.toLowerCase() === CATEGORIA_FILTRO.toLowerCase()) ?? categorias[0];
+    if (!match) throw new Error(`No encontré ninguna categoría de WP que coincida con "${CATEGORIA_FILTRO}".`);
+    categoriaId = match.id;
+    console.log(`Filtrando por categoría de WP: "${match.name}" (id ${match.id})`);
+  }
+
+  console.log(`Trayendo las últimas ${CANTIDAD} novedades de WordPress${categoriaId ? ` de la categoría "${CATEGORIA_FILTRO}"` : ""}...`);
+  const url = `${WP_BASE}/posts?per_page=${CANTIDAD}&_embed=1${categoriaId ? `&categories=${categoriaId}` : ""}`;
+  const res = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0" } });
   if (!res.ok) throw new Error(`WP API error: ${res.status}`);
   const posts: WpPost[] = await res.json();
 
