@@ -38,7 +38,7 @@ function IconSearch() {
   );
 }
 
-const POR_PAGINA = 20;
+const POR_PAGINA = 50;
 
 export function BuscadorMatriculados({ matriculados, initialQuery }: { matriculados: Matriculado[]; initialQuery?: string }) {
   const [query, setQuery] = useState(initialQuery ?? "");
@@ -104,34 +104,25 @@ export function BuscadorMatriculados({ matriculados, initialQuery }: { matricula
       </div>
 
       {totalPaginas > 1 && (
-        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+        <div className="mt-5 flex items-center justify-center gap-4">
           <button
             type="button"
             onClick={() => setPagina((p) => Math.max(1, p - 1))}
             disabled={paginaActual === 1}
-            className="grid h-9 w-9 cursor-pointer place-items-center rounded-full border border-slate-200 text-cpe-navy transition hover:bg-cpe-bg disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent"
-            aria-label="Página anterior"
+            className="flex cursor-pointer items-center gap-1.5 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-cpe-navy transition hover:bg-cpe-bg disabled:cursor-default disabled:opacity-30 disabled:hover:bg-white"
           >
-            ‹
+            ‹ Anterior
           </button>
-          {Array.from({ length: totalPaginas }, (_, i) => i + 1).map((n) => (
-            <button
-              key={n}
-              type="button"
-              onClick={() => setPagina(n)}
-              className={`h-9 w-9 cursor-pointer rounded-full text-sm font-bold transition ${n === paginaActual ? "bg-cpe-navy text-white" : "text-cpe-navy hover:bg-cpe-bg"}`}
-            >
-              {n}
-            </button>
-          ))}
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+            Página {paginaActual} de {totalPaginas}
+          </p>
           <button
             type="button"
             onClick={() => setPagina((p) => Math.min(totalPaginas, p + 1))}
             disabled={paginaActual === totalPaginas}
-            className="grid h-9 w-9 cursor-pointer place-items-center rounded-full border border-slate-200 text-cpe-navy transition hover:bg-cpe-bg disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent"
-            aria-label="Página siguiente"
+            className="flex cursor-pointer items-center gap-1.5 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-cpe-navy transition hover:bg-cpe-bg disabled:cursor-default disabled:opacity-30 disabled:hover:bg-white"
           >
-            ›
+            Siguiente ›
           </button>
         </div>
       )}
