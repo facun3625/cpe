@@ -1,6 +1,8 @@
+import { ImagenPortadaInput } from "@/components/admin/media-inputs";
 import { Field, TextInput, Select, SubmitButton } from "@/components/admin/fields";
 
 type AutoridadFormValues = {
+  fotoUrl?: string | null;
   grupo?: string;
   rol?: string | null;
   nombre?: string;
@@ -37,6 +39,9 @@ export function AutoridadForm({
       </Field>
       <Field label="Cargo (solo para Consejo directivo o Síndicos, ej. «Presidente»)">
         <TextInput name="rol" defaultValue={defaultValues?.rol ?? ""} />
+      </Field>
+      <Field label="Foto" hint="Se muestra en la tarjeta del Consejo directivo. Podés cargarla, reemplazarla o quitarla.">
+        <ImagenPortadaInput name="foto" defaultUrl={defaultValues?.fotoUrl} />
       </Field>
       <Field label="Orden">
         <TextInput name="orden" type="number" defaultValue={defaultValues?.orden ?? 0} />

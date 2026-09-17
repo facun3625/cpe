@@ -113,6 +113,7 @@ enum AutoridadGrupo {
 }
 
 model Autoridad {
+  fotoUrl   String?
   id        String         @id @default(cuid())
   grupo     AutoridadGrupo
   rol       String?

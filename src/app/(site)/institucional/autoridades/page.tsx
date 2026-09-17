@@ -1,3 +1,4 @@
+import { FotoPublica } from "@/components/foto-publica";
 import { InternalPage } from "@/components/internal-page";
 import { prisma } from "@/lib/prisma";
 
@@ -54,8 +55,8 @@ export default async function Page() {
       <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {consejoDirectivo.map((persona, index) => (
           <div key={persona.id} className="group rounded-3xl border border-slate-200 bg-white p-6 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
-            <div className={`mx-auto flex h-20 w-20 items-center justify-center rounded-full text-xl font-bold text-white ${AVATAR_COLORS[index % AVATAR_COLORS.length]}`}>
-              {getIniciales(persona.nombre)}
+            <div className={`mx-auto flex h-20 w-20 items-center justify-center overflow-hidden rounded-full text-xl font-bold text-white ${AVATAR_COLORS[index % AVATAR_COLORS.length]}`}>
+              <FotoPublica src={persona.fotoUrl} alt={formatNombre(persona.nombre)} className="h-full w-full object-cover" fallback={getIniciales(persona.nombre)} />
             </div>
             <p className="mt-4 text-xs font-bold uppercase tracking-[.14em] text-cpe-coral">{persona.rol}</p>
             <p className="mt-1.5 text-base font-bold leading-5 text-cpe-navy">{formatNombre(persona.nombre)}</p>
