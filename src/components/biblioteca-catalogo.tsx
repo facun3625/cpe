@@ -1,5 +1,9 @@
 "use client";
 
+import { plainText } from "@/lib/rich-text";
+
+import { RichText } from "@/components/rich-text";
+
 import { useState } from "react";
 import { FotoPublica } from "@/components/foto-publica";
 
@@ -35,12 +39,12 @@ export function BibliotecaCatalogo({ categorias }: { categorias: Categoria[] }) 
                 {categoria.posts.map((post) => (
                   <article key={post.id} className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:-translate-y-1 hover:shadow-lg">
                     <div className="flex h-44 items-center justify-center bg-slate-100 p-3 sm:h-48">
-                      <FotoPublica src={post.portadaUrl} alt={`Portada de ${post.titulo}`} className="h-full w-full object-contain" fallback={<div className="text-center text-slate-400"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="mx-auto h-10 w-10"><path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1m0-15c3-2 6-2 9-1v15c-3-1-6-1-9 1V5Z" /></svg><p className="mt-2 text-xs">Portada no disponible</p></div>} />
+                      <FotoPublica src={post.portadaUrl} alt={`Portada de ${plainText(post.titulo)}`} className="h-full w-full object-contain" fallback={<div className="text-center text-slate-400"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="mx-auto h-10 w-10"><path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1m0-15c3-2 6-2 9-1v15c-3-1-6-1-9 1V5Z" /></svg><p className="mt-2 text-xs">Portada no disponible</p></div>} />
                     </div>
                     <div className="flex flex-1 flex-col p-4">
-                      <h4 className="break-words text-base font-bold text-cpe-navy">{post.titulo}</h4>
-                      <p className="mt-2 flex-1 break-words text-sm leading-5 text-slate-600">{post.bajada}</p>
-                      {post.archivoUrl && <a href={post.archivoUrl} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-cpe-navy px-3 py-2.5 text-xs font-bold text-white transition hover:bg-cpe-royal" aria-label={`Descargar bibliografía: ${post.titulo}`}><span aria-hidden="true">↓</span> Descargar</a>}
+                      <h4 className="break-words text-base font-bold text-cpe-navy"><RichText value={post.titulo} /></h4>
+                      <p className="mt-2 flex-1 break-words text-sm leading-5 text-slate-600"><RichText value={post.bajada} /></p>
+                      {post.archivoUrl && <a href={post.archivoUrl} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-cpe-navy px-3 py-2.5 text-xs font-bold text-white transition hover:bg-cpe-royal" aria-label={`Descargar bibliografía: ${plainText(post.titulo)}`}><span aria-hidden="true">↓</span> Descargar</a>}
                     </div>
                   </article>
                 ))}

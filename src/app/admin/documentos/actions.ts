@@ -1,5 +1,7 @@
 "use server";
 
+import { readRichText } from "@/lib/rich-text";
+
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -23,7 +25,7 @@ function revalidateTodo() {
 export async function createDocumento(formData: FormData) {
   await requireSession();
 
-  const titulo = String(formData.get("titulo") ?? "").trim();
+  const titulo = readRichText(formData.get("titulo"));
   const tipo = String(formData.get("tipo") ?? "") as DocumentoTipo;
   const grupo = String(formData.get("grupo") ?? "").trim();
   const noReconocida = formData.get("noReconocida") === "on";
@@ -44,7 +46,7 @@ export async function createDocumento(formData: FormData) {
 export async function updateDocumento(id: string, formData: FormData) {
   await requireSession();
 
-  const titulo = String(formData.get("titulo") ?? "").trim();
+  const titulo = readRichText(formData.get("titulo"));
   const tipo = String(formData.get("tipo") ?? "") as DocumentoTipo;
   const grupo = String(formData.get("grupo") ?? "").trim();
   const noReconocida = formData.get("noReconocida") === "on";

@@ -1,5 +1,7 @@
 "use client";
 
+import { RichText } from "@/components/rich-text";
+
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { getVideoEmbedUrl } from "@/lib/video";
@@ -92,10 +94,10 @@ export function SitePopup({
         </div>
 
         <div className="p-7">
-          {titulo && <h2 className="font-display text-2xl font-semibold text-cpe-navy">{titulo}</h2>}
+          {titulo && <h2 className="font-display text-2xl font-semibold text-cpe-navy"><RichText value={titulo} /></h2>}
           {texto && (
             <div className="mt-3 space-y-3 text-sm leading-6 text-slate-600">
-              {texto.split("\n").filter((p) => p.trim()).map((parrafo, i) => <p key={i}>{parrafo}</p>)}
+              <RichText value={texto} />
             </div>
           )}
           <button

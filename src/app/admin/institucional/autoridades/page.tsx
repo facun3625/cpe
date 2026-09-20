@@ -1,3 +1,4 @@
+import { plainText } from "@/lib/rich-text";
 import { prisma } from "@/lib/prisma";
 import { AdminTable, NewButton, PageHeader, RowActions } from "@/components/admin/fields";
 import { InstitucionalNav } from "@/components/admin/institucional-nav";
@@ -24,7 +25,7 @@ export default async function AdminAutoridadesPage() {
           <tr key={a.id}>
             <td className="px-4 py-3 font-medium text-gray-900">{a.nombre}</td>
             <td className="px-4 py-3 text-gray-600">{GRUPO_LABELS[a.grupo]}</td>
-            <td className="px-4 py-3 text-gray-600">{a.rol ?? "—"}</td>
+            <td className="px-4 py-3 text-gray-600">{plainText(a.rol) || "—"}</td>
             <td className="px-4 py-3 text-gray-600">{a.orden}</td>
             <td className="px-4 py-3 text-right">
               <RowActions editHref={`/admin/institucional/autoridades/${a.id}`} deleteAction={deleteAutoridad.bind(null, a.id)} />

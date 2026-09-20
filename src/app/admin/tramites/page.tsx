@@ -1,3 +1,5 @@
+import { plainText } from "@/lib/rich-text";
+import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { AdminTable, NewButton, PageHeader, RowActions } from "@/components/admin/fields";
 import { deleteTramite } from "./actions";
@@ -11,7 +13,7 @@ export default async function AdminTramitesPage() {
       <AdminTable head={["Título", "Requisitos", "Orden"]} empty={tramites.length === 0 ? "Todavía no hay trámites cargados." : undefined}>
         {tramites.map((t) => (
           <tr key={t.id}>
-            <td className="px-4 py-3 font-medium text-gray-900">{t.titulo}</td>
+            <td className="px-4 py-3 font-medium text-gray-900">{plainText(t.titulo)}</td>
             <td className="px-4 py-3 text-gray-600">{t.requisitos.length}</td>
             <td className="px-4 py-3 text-gray-600">{t.orden}</td>
             <td className="px-4 py-3 text-right">
@@ -21,7 +23,7 @@ export default async function AdminTramitesPage() {
         ))}
       </AdminTable>
       <p className="mt-4 text-xs text-slate-500">
-        Para adjuntar la «nota modelo» de un trámite, cargá el PDF en <a href="/admin/documentos/nueva" className="font-semibold text-cpe-blue hover:underline">Documentos</a> con tipo «Nota modelo» y el campo Grupo igual al slug del trámite.
+        Para adjuntar la «nota modelo» de un trámite, cargá el PDF en <Link href="/admin/documentos/nueva" className="font-semibold text-cpe-blue hover:underline">Documentos</Link> con tipo «Nota modelo» y el campo Grupo igual al slug del trámite.
       </p>
     </div>
   );

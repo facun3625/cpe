@@ -1,3 +1,4 @@
+import { joinRichTextLines } from "@/lib/rich-text";
 import { Field, TextInput, TextArea, SubmitButton } from "@/components/admin/fields";
 
 type ComisionFormValues = { titulo?: string; texto?: string; tramitesRelacionados?: string[]; orden?: number };
@@ -14,13 +15,13 @@ export function ComisionForm({
   return (
     <form action={action} className="max-w-xl space-y-5">
       <Field label="Título">
-        <TextInput name="titulo" required defaultValue={defaultValues?.titulo} />
+        <TextInput rich name="titulo" required defaultValue={defaultValues?.titulo} />
       </Field>
       <Field label="Texto">
         <TextArea name="texto" rows={3} required defaultValue={defaultValues?.texto} />
       </Field>
       <Field label="Trámites relacionados (uno por línea, opcional)">
-        <TextArea name="tramitesRelacionados" rows={4} defaultValue={(defaultValues?.tramitesRelacionados ?? []).join("\n")} />
+        <TextArea name="tramitesRelacionados" rows={4} defaultValue={joinRichTextLines((defaultValues?.tramitesRelacionados ?? []))} />
       </Field>
       <Field label="Orden">
         <TextInput name="orden" type="number" defaultValue={defaultValues?.orden ?? 0} />

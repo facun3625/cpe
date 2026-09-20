@@ -1,5 +1,7 @@
 "use server";
 
+import { readRichText, richTextLines } from "@/lib/rich-text";
+
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -11,17 +13,17 @@ async function requireSession() {
 }
 
 function lineas(valor: FormDataEntryValue | null) {
-  return String(valor ?? "").split("\n").map((l) => l.trim()).filter(Boolean);
+  return richTextLines(valor);
 }
 
 export async function guardarMision(formData: FormData) {
   await requireSession();
 
   const contenido = {
-    misionTitulo: String(formData.get("misionTitulo") ?? "").trim(),
-    misionTexto: String(formData.get("misionTexto") ?? "").trim(),
-    visionTitulo: String(formData.get("visionTitulo") ?? "").trim(),
-    visionTexto: String(formData.get("visionTexto") ?? "").trim(),
+    misionTitulo: readRichText(formData.get("misionTitulo")),
+    misionTexto: readRichText(formData.get("misionTexto")),
+    visionTitulo: readRichText(formData.get("visionTitulo")),
+    visionTexto: readRichText(formData.get("visionTexto")),
     propositos: lineas(formData.get("propositos")),
   };
 

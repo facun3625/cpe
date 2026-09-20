@@ -1,5 +1,7 @@
 "use client";
 
+import { plainText } from "@/lib/rich-text";
+
 import Link from "next/link";
 import { useMemo, useState, useTransition } from "react";
 import { AdminTable } from "@/components/admin/fields";
@@ -15,7 +17,7 @@ type NovedadRow = {
 };
 
 function normalizar(texto: string) {
-  return texto.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  return plainText(texto).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 }
 
 function IconSearch() {
@@ -132,7 +134,7 @@ export function NovedadesBuscador({
                 ★
               </button>
             </td>
-            <td className="px-4 py-3 font-medium text-gray-900">{n.titulo}</td>
+            <td className="px-4 py-3 font-medium text-gray-900">{plainText(n.titulo)}</td>
             <td className="px-4 py-3 text-gray-600">{n.categoria}</td>
             <td className="px-4 py-3 text-gray-600">{n.fecha}</td>
             <td className="px-4 py-3">
@@ -157,7 +159,7 @@ export function NovedadesBuscador({
       <ConfirmDialog
         open={aBorrar !== null}
         title="Eliminar novedad"
-        message={aBorrar ? `¿Eliminar "${aBorrar.titulo}"? Esta acción no se puede deshacer.` : ""}
+        message={aBorrar ? `¿Eliminar "${plainText(aBorrar.titulo)}"? Esta acción no se puede deshacer.` : ""}
         onConfirm={confirmarBorrado}
         onCancel={() => setABorrar(null)}
       />

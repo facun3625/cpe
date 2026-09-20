@@ -1,3 +1,4 @@
+import { RichText } from "@/components/rich-text";
 import { FotoPublica } from "@/components/foto-publica";
 import { InternalPage } from "@/components/internal-page";
 import { prisma } from "@/lib/prisma";
@@ -58,7 +59,7 @@ export default async function Page() {
             <div className={`mx-auto flex h-20 w-20 items-center justify-center overflow-hidden rounded-full text-xl font-bold text-white ${AVATAR_COLORS[index % AVATAR_COLORS.length]}`}>
               <FotoPublica src={persona.fotoUrl} alt={formatNombre(persona.nombre)} className="h-full w-full object-cover" fallback={getIniciales(persona.nombre)} />
             </div>
-            <p className="mt-4 text-xs font-bold uppercase tracking-[.14em] text-cpe-coral">{persona.rol}</p>
+            <p className="mt-4 text-xs font-bold uppercase tracking-[.14em] text-cpe-coral"><RichText value={persona.rol} /></p>
             <p className="mt-1.5 text-base font-bold leading-5 text-cpe-navy">{formatNombre(persona.nombre)}</p>
           </div>
         ))}
@@ -75,7 +76,7 @@ export default async function Page() {
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
             {sindicos.map((persona) => (
               <div key={persona.id}>
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{persona.rol}</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-400"><RichText value={persona.rol} /></p>
                 <p className="mt-1 text-sm font-medium text-cpe-navy">{persona.nombre}</p>
               </div>
             ))}

@@ -1,3 +1,4 @@
+import { RichText } from "@/components/rich-text";
 import { Accordion } from "@/components/accordion";
 import { InternalPage } from "@/components/internal-page";
 import { prisma } from "@/lib/prisma";
@@ -36,13 +37,13 @@ export default async function Page() {
             title: tramite.titulo,
             content: (
               <>
-                <p>{tramite.texto}</p>
+                <p><RichText value={tramite.texto} /></p>
                 <p className="mt-4 text-xs font-bold uppercase tracking-[.14em] text-cpe-coral">Requisitos</p>
                 <ul className="mt-3 space-y-2">
                   {tramite.requisitos.map((req) => (
                     <li key={req} className="flex items-start gap-2">
                       <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-cpe-navy/40" aria-hidden />
-                      {req}
+                      <RichText value={req} />
                     </li>
                   ))}
                 </ul>

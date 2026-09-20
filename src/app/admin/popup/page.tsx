@@ -44,7 +44,7 @@ export default async function AdminPopupPage() {
             </Field>
 
             <Field label="Título" hint="Opcional">
-              <TextInput name="titulo" defaultValue={config?.titulo ?? ""} />
+              <TextInput rich name="titulo" defaultValue={config?.titulo ?? ""} />
             </Field>
 
             <Field label="Texto" hint="Opcional — se muestra debajo del título (y de la imagen o video, si elegiste esos tipos)">

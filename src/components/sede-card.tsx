@@ -1,3 +1,4 @@
+import { RichText } from "@/components/rich-text";
 type Sede = {
   id: string;
   nombre: string;
@@ -47,10 +48,10 @@ export function SedeCard({ sede, className = "", variant = "dark" }: { sede: Sed
   const titleColor = variant === "dark" ? "text-white" : "text-cpe-navy";
   return (
     <div className={className}>
-      <h3 className={`text-base font-bold ${titleColor}`}>{sede.nombre}</h3>
+      <h3 className={`text-base font-bold ${titleColor}`}><RichText value={sede.nombre} /></h3>
       <div className={`mt-3 space-y-1.5 text-xs leading-5 ${textColor}`}>
         <p className="flex items-start gap-2">
-          <IconPin /> {sede.direccion}
+          <IconPin /> <RichText value={sede.direccion} />
         </p>
         {sede.telefonos.map((telefono) => (
           <p key={telefono} className="flex items-start gap-2">
@@ -58,7 +59,7 @@ export function SedeCard({ sede, className = "", variant = "dark" }: { sede: Sed
           </p>
         ))}
         <p className="flex items-start gap-2">
-          <IconClock /> {sede.horario}
+          <IconClock /> <RichText value={sede.horario} />
         </p>
         {sede.email && (
           <p className="flex items-start gap-2">

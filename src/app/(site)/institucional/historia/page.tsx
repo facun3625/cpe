@@ -1,3 +1,4 @@
+import { RichText } from "@/components/rich-text";
 import Image from "next/image";
 import { InternalPage } from "@/components/internal-page";
 import { prisma } from "@/lib/prisma";
@@ -36,8 +37,8 @@ export default async function Page() {
                   {hito.anio}
                 </div>
                 <div className="w-full rounded-3xl border border-slate-200 bg-white p-6 sm:p-7">
-                  <h2 className="text-lg font-bold text-cpe-navy">{hito.titulo}</h2>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">{hito.texto}</p>
+                  <h2 className="text-lg font-bold text-cpe-navy"><RichText value={hito.titulo} /></h2>
+                  <p className="mt-2 text-sm leading-6 text-slate-600"><RichText value={hito.texto} /></p>
                 </div>
               </div>
             ))}

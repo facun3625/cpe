@@ -1,3 +1,4 @@
+import { RichText } from "@/components/rich-text";
 import { InternalPage } from "@/components/internal-page";
 import { prisma } from "@/lib/prisma";
 
@@ -37,35 +38,20 @@ export default async function Page() {
           {requisitos.map((req) => (
             <li key={req} className="flex items-start gap-2 text-sm leading-6 text-slate-600">
               <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-cpe-navy/40" aria-hidden />
-              {req}
+              <RichText value={req} />
             </li>
           ))}
         </ul>
 
         <div className="mt-6 flex flex-wrap gap-3">
-          {documentos.map((doc) =>
-            doc.archivoUrl ? (
-              <a
-                key={doc.id}
-                href={doc.archivoUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-cpe-bg px-5 py-2.5 text-xs font-bold text-cpe-navy transition hover:bg-slate-200"
-              >
-                <IconDownload /> {doc.titulo}
-              </a>
-            ) : (
-              <button
-                key={doc.id}
-                type="button"
-                disabled
-                title="Disponible próximamente"
-                className="inline-flex cursor-not-allowed items-center gap-2 rounded-full bg-cpe-bg px-5 py-2.5 text-xs font-bold text-cpe-navy/40"
-              >
-                <IconDownload /> {doc.titulo}
-              </button>
-            )
-          )}
+          {documentos.map((doc) => (
+            <div key={doc.id} className="rounded-xl bg-cpe-bg p-4 text-sm text-cpe-navy">
+              <p className="font-semibold"><RichText value={doc.titulo} /></p>
+              {doc.archivoUrl ? (
+                <a href={doc.archivoUrl} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-2 text-xs font-bold underline"><IconDownload /> Descargar</a>
+              ) : <p className="mt-2 text-xs text-slate-500">Disponible próximamente</p>}
+            </div>
+          ))}
           <a
             href="https://cpesag.com.ar"
             target="_blank"

@@ -152,6 +152,7 @@ model NomencladorItem {
   upe          Int
   cd           Float
   cn           Float
+  dd           Float?
   dn           Float
   noReconocida Boolean  @default(false)
   orden        Int      @default(0)

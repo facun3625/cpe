@@ -1,5 +1,7 @@
 "use server";
 
+import { readRichText } from "@/lib/rich-text";
+
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -17,8 +19,8 @@ export async function guardarPopup(formData: FormData) {
 
   const activo = formData.get("activo") === "on";
   const tipo = String(formData.get("tipo") ?? "TEXTO") as PopupTipo;
-  const titulo = String(formData.get("titulo") ?? "").trim();
-  const texto = String(formData.get("texto") ?? "").trim();
+  const titulo = readRichText(formData.get("titulo"));
+  const texto = readRichText(formData.get("texto"));
   const videoUrl = String(formData.get("videoUrl") ?? "").trim();
   const mostrarSiempre = formData.get("mostrarSiempre") === "on";
   const imagen = formData.get("imagen") as File | null;

@@ -107,6 +107,8 @@ export async function importarMatriculadosExcel(formData: FormData): Promise<Imp
   const errores: string[] = [];
   const dnisDelArchivo = new Set<string>();
 
+  const validos: { apellido: string; nombre: string; dni: string; matricula: string; nivel: NivelMatricula }[] = [];
+
   for (const [index, filaCruda] of filas.entries()) {
     const fila: Record<string, unknown> = {};
     for (const [clave, valor] of Object.entries(filaCruda)) fila[normalizarClave(clave)] = valor;
@@ -126,21 +128,30 @@ export async function importarMatriculadosExcel(formData: FormData): Promise<Imp
     const nivel = detectarNivel(nivelTexto);
     dnisDelArchivo.add(dni);
 
-    const existente = await prisma.matriculado.findUnique({ where: { dni } });
-    if (existente) {
-      await prisma.matriculado.update({ where: { dni }, data: { apellido, nombre, matricula, nivel } });
-      actualizados++;
-    } else {
-      await prisma.matriculado.create({ data: { apellido, nombre, dni, matricula, nivel } });
-      creados++;
-    }
+    validos.push({ apellido, nombre, dni, matricula, nivel });
   }
 
-  let eliminados = 0;
-  if (modo === "reemplazar" && dnisDelArchivo.size > 0) {
-    const { count } = await prisma.matriculado.deleteMany({ where: { dni: { notIn: Array.from(dnisDelArchivo) } } });
-    eliminados = count;
+  // Validar el archivo completo antes de modificar o borrar el padrón.
+  if (modo === "reemplazar" && (errores.length > 0 || validos.length === 0)) {
+    return {
+      creados: 0, actualizados: 0, omitidos, eliminados: 0,
+      errores: ["No se reemplazó el padrón. Corregí las filas incompletas y verificá que el archivo tenga datos válidos.", ...errores.slice(0, 19)],
+    };
   }
+
+  const eliminados = await prisma.$transaction(async (tx) => {
+    for (const { dni, ...data } of validos) {
+      const existente = await tx.matriculado.findUnique({ where: { dni } });
+      await tx.matriculado.upsert({ where: { dni }, update: data, create: { dni, ...data } });
+      if (existente) actualizados++;
+      else creados++;
+    }
+    if (modo === "reemplazar") {
+      const { count } = await tx.matriculado.deleteMany({ where: { dni: { notIn: Array.from(dnisDelArchivo) } } });
+      return count;
+    }
+    return 0;
+  }, { timeout: 120_000 });
 
   revalidatePath("/matriculados");
   revalidatePath("/admin/matriculados");

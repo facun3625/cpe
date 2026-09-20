@@ -1,5 +1,7 @@
 "use server";
 
+import { richTextLines } from "@/lib/rich-text";
+
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -13,7 +15,7 @@ async function requireSession() {
 export async function guardarBecas(formData: FormData) {
   await requireSession();
 
-  const requisitos = String(formData.get("requisitos") ?? "").split("\n").map((l) => l.trim()).filter(Boolean);
+  const requisitos = richTextLines(formData.get("requisitos"));
 
   await prisma.paginaTexto.upsert({
     where: { pagina: "becas" },

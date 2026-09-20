@@ -20,7 +20,7 @@ export function DocumentoForm({
   return (
     <form action={action} className="max-w-xl space-y-5">
       <Field label="Título">
-        <TextInput name="titulo" required defaultValue={defaultValues?.titulo} />
+        <TextInput rich name="titulo" required defaultValue={defaultValues?.titulo} />
       </Field>
 
       <Field label="Tipo">

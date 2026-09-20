@@ -1,5 +1,7 @@
 "use server";
 
+import { readRichText, richTextLines } from "@/lib/rich-text";
+
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -11,16 +13,16 @@ async function requireSession() {
 }
 
 function lineas(valor: FormDataEntryValue | null) {
-  return String(valor ?? "").split("\n").map((l) => l.trim()).filter(Boolean);
+  return richTextLines(valor);
 }
 
 export async function guardarPropuestaEducativa(formData: FormData) {
   await requireSession();
 
   const contenido = {
-    intro: String(formData.get("intro") ?? "").trim(),
+    intro: readRichText(formData.get("intro")),
     parrafos: lineas(formData.get("parrafos")),
-    firma: String(formData.get("firma") ?? "").trim(),
+    firma: readRichText(formData.get("firma")),
   };
 
   await prisma.paginaTexto.upsert({

@@ -1,5 +1,7 @@
 "use server";
 
+import { readRichText } from "@/lib/rich-text";
+
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -25,8 +27,8 @@ function revalidateTodo(pagina: string) {
 export async function createSeccionItem(pagina: string, formData: FormData) {
   await requireSession();
 
-  const titulo = String(formData.get("titulo") ?? "").trim();
-  const texto = String(formData.get("texto") ?? "").trim();
+  const titulo = readRichText(formData.get("titulo"));
+  const texto = readRichText(formData.get("texto"));
   const href = String(formData.get("href") ?? "").trim();
   const orden = Number(formData.get("orden") ?? 0);
 
@@ -41,8 +43,8 @@ export async function createSeccionItem(pagina: string, formData: FormData) {
 export async function updateSeccionItem(id: string, pagina: string, formData: FormData) {
   await requireSession();
 
-  const titulo = String(formData.get("titulo") ?? "").trim();
-  const texto = String(formData.get("texto") ?? "").trim();
+  const titulo = readRichText(formData.get("titulo"));
+  const texto = readRichText(formData.get("texto"));
   const href = String(formData.get("href") ?? "").trim();
   const orden = Number(formData.get("orden") ?? 0);
 

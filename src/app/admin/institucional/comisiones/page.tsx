@@ -1,3 +1,4 @@
+import { plainText } from "@/lib/rich-text";
 import { prisma } from "@/lib/prisma";
 import { AdminTable, NewButton, PageHeader, RowActions } from "@/components/admin/fields";
 import { InstitucionalNav } from "@/components/admin/institucional-nav";
@@ -13,7 +14,7 @@ export default async function AdminComisionesPage() {
       <AdminTable head={["Título", "Trámites relacionados", "Orden"]} empty={comisiones.length === 0 ? "Todavía no hay comisiones cargadas." : undefined}>
         {comisiones.map((c) => (
           <tr key={c.id}>
-            <td className="px-4 py-3 font-medium text-gray-900">{c.titulo}</td>
+            <td className="px-4 py-3 font-medium text-gray-900">{plainText(c.titulo)}</td>
             <td className="px-4 py-3 text-gray-600">{c.tramitesRelacionados.length}</td>
             <td className="px-4 py-3 text-gray-600">{c.orden}</td>
             <td className="px-4 py-3 text-right">

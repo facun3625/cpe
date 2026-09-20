@@ -14,16 +14,16 @@ export function SedeForm({
   return (
     <form action={action} className="max-w-xl space-y-5">
       <Field label="Nombre">
-        <TextInput name="nombre" required defaultValue={defaultValues?.nombre} />
+        <TextInput rich name="nombre" required defaultValue={defaultValues?.nombre} />
       </Field>
       <Field label="Dirección">
-        <TextInput name="direccion" required defaultValue={defaultValues?.direccion} />
+        <TextInput rich name="direccion" required defaultValue={defaultValues?.direccion} />
       </Field>
       <Field label="Teléfonos (uno por línea, opcional)">
-        <TextArea name="telefonos" rows={3} defaultValue={(defaultValues?.telefonos ?? []).join("\n")} />
+        <TextArea rich={false} name="telefonos" rows={3} defaultValue={(defaultValues?.telefonos ?? []).join("\n")} />
       </Field>
       <Field label="Horario">
-        <TextInput name="horario" required defaultValue={defaultValues?.horario} />
+        <TextInput rich name="horario" required defaultValue={defaultValues?.horario} />
       </Field>
       <Field label="Email (opcional)">
         <TextInput name="email" type="email" defaultValue={defaultValues?.email ?? ""} />

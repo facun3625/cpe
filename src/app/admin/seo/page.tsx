@@ -24,7 +24,7 @@ export default async function AdminSeoPage() {
             </Field>
 
             <Field label="Descripción" hint="El resumen que Google muestra debajo del título en los resultados de búsqueda (ideal: 150-160 caracteres)">
-              <TextArea name="descripcion" rows={3} defaultValue={config?.descripcion ?? ""} />
+              <TextArea rich={false} name="descripcion" rows={3} defaultValue={config?.descripcion ?? ""} />
             </Field>
 
             <Field label="Palabras clave" hint="Separadas por coma. Hoy tienen poco peso en Google, pero las sigue pidiendo alguna herramienta">

@@ -1,3 +1,5 @@
+import { plainText } from "@/lib/rich-text";
+import { joinRichTextLines } from "@/lib/rich-text";
 import { prisma } from "@/lib/prisma";
 import { Field, TextArea, SubmitButton } from "@/components/admin/fields";
 import { guardarBecas } from "./actions";
@@ -15,7 +17,7 @@ export default async function AdminBecasPage() {
 
       <form action={guardarBecas} className="mt-6 max-w-2xl space-y-5">
         <Field label="Requisitos para solicitar una beca (uno por línea)">
-          <TextArea name="requisitos" rows={5} defaultValue={requisitos.join("\n")} />
+          <TextArea name="requisitos" rows={5} defaultValue={joinRichTextLines(requisitos)} />
         </Field>
         <SubmitButton>Guardar cambios</SubmitButton>
       </form>
@@ -26,7 +28,7 @@ export default async function AdminBecasPage() {
         <ul className="mt-3 space-y-2">
           {documentos.map((d) => (
             <li key={d.id} className="flex items-center justify-between rounded-md border border-gray-200 bg-white px-4 py-3 text-sm">
-              <span>{d.titulo}</span>
+              <span>{plainText(d.titulo)}</span>
               <div className="flex items-center gap-3">
                 <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${d.archivoUrl ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-500"}`}>
                   {d.archivoUrl ? "Cargado" : "Pendiente"}

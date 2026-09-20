@@ -1,3 +1,4 @@
+import { plainText } from "@/lib/rich-text";
 import { prisma } from "@/lib/prisma";
 import { AdminTable, NewButton, PageHeader, RowActions } from "@/components/admin/fields";
 import { deleteSeccionItem } from "../actions";
@@ -18,7 +19,7 @@ export default async function AdminSeccionPage({ params }: { params: Promise<{ p
       <AdminTable head={["Título", "Link", "Orden"]} empty={items.length === 0 ? "Todavía no hay cards cargadas." : undefined}>
         {items.map((i) => (
           <tr key={i.id}>
-            <td className="px-4 py-3 font-medium text-gray-900">{i.titulo}</td>
+            <td className="px-4 py-3 font-medium text-gray-900">{plainText(i.titulo)}</td>
             <td className="px-4 py-3 text-gray-600">{i.href ?? "—"}</td>
             <td className="px-4 py-3 text-gray-600">{i.orden}</td>
             <td className="px-4 py-3 text-right">

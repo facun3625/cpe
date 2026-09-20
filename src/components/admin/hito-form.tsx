@@ -17,7 +17,7 @@ export function HitoForm({
         <TextInput name="anio" required defaultValue={defaultValues?.anio} />
       </Field>
       <Field label="Título">
-        <TextInput name="titulo" required defaultValue={defaultValues?.titulo} />
+        <TextInput rich name="titulo" required defaultValue={defaultValues?.titulo} />
       </Field>
       <Field label="Texto">
         <TextArea name="texto" rows={4} required defaultValue={defaultValues?.texto} />

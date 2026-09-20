@@ -1,5 +1,7 @@
 "use server";
 
+import { readRichText } from "@/lib/rich-text";
+
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -33,7 +35,7 @@ export async function createAutoridad(formData: FormData) {
   await requireSession();
 
   const grupo = String(formData.get("grupo") ?? "") as AutoridadGrupo;
-  const rol = String(formData.get("rol") ?? "").trim();
+  const rol = readRichText(formData.get("rol"));
   const nombre = String(formData.get("nombre") ?? "").trim();
   const orden = Number(formData.get("orden") ?? 0);
 
@@ -49,7 +51,7 @@ export async function updateAutoridad(id: string, formData: FormData) {
   await requireSession();
 
   const grupo = String(formData.get("grupo") ?? "") as AutoridadGrupo;
-  const rol = String(formData.get("rol") ?? "").trim();
+  const rol = readRichText(formData.get("rol"));
   const nombre = String(formData.get("nombre") ?? "").trim();
   const orden = Number(formData.get("orden") ?? 0);
 

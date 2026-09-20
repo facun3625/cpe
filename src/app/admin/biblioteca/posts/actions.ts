@@ -1,5 +1,7 @@
 "use server";
 
+import { readRichText } from "@/lib/rich-text";
+
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -20,8 +22,8 @@ export async function createPost(formData: FormData) {
   await requireSession();
 
   const categoriaId = String(formData.get("categoriaId") ?? "").trim();
-  const titulo = String(formData.get("titulo") ?? "").trim();
-  const bajada = String(formData.get("bajada") ?? "").trim();
+  const titulo = readRichText(formData.get("titulo"));
+  const bajada = readRichText(formData.get("bajada"));
   const publicado = formData.get("publicado") === "on";
   const orden = Number(formData.get("orden") ?? 0);
   const portada = formData.get("portada") as File | null;
@@ -44,8 +46,8 @@ export async function updatePost(id: string, formData: FormData) {
   await requireSession();
 
   const categoriaId = String(formData.get("categoriaId") ?? "").trim();
-  const titulo = String(formData.get("titulo") ?? "").trim();
-  const bajada = String(formData.get("bajada") ?? "").trim();
+  const titulo = readRichText(formData.get("titulo"));
+  const bajada = readRichText(formData.get("bajada"));
   const publicado = formData.get("publicado") === "on";
   const orden = Number(formData.get("orden") ?? 0);
   const portada = formData.get("portada") as File | null;

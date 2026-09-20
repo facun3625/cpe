@@ -1,0 +1,135 @@
+.;;;;;;
+ARANCELES SUGERIDOS PARA LAS PRESTACIONES DE ENFERMERIA. 2022;;;;;;
+;;;VALOR UPE;;;
+;UPE;;C.D.;C.N.;D.D.;D.N.
+Actividad;Tiempo;Cant.;$ 94,28;$ 136,19;$ 136,19;$ 162,38
+Acompañante del paciente;60';20;$ 1.885,65;$ 2.723,76;$ 2.723,76;$ 3.247,53
+Administración  de citostático;60';20;$ 1.885,65;$ 2.723,76;$ 2.723,76;$ 3.247,53
+Administracion  de nutrición parenteral;45';15;$ 1.414,24;$ 2.042,82;$ 2.042,82;$ 2.435,65
+Administración de nutrición enteral;45';15;$ 1.414,24;$ 2.042,82;$ 2.042,82;$ 2.435,65
+Administración de vacunas;15';5;$ 471,41;$ 680,94;$ 680,94;$ 811,88
+Alimentación por biberón;9';3;$ 282,85;$ 408,56;$ 408,56;$ 487,13
+Alimentación por gastrostomía ;45';15;$ 1.414,24;$ 2.042,82;$ 2.042,82;$ 2.435,65
+Alimentación por sonda nasogástrica;21';7;$ 659,98;$ 953,32;$ 953,32;$ 1.136,64
+Aplicación de calor;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Aplicación de frío;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Asistencia en exámen clínico ;15';5;$ 471,41;$ 680,94;$ 680,94;$ 811,88
+Aspiración de secreciones bucales;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Aspiración de secreciones nasales;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Aspiración secreciones traqueostomía;9';3;$ 282,85;$ 408,56;$ 408,56;$ 487,13
+Aspiración secreciones tubo endotraq.;9';3;$ 282,85;$ 408,56;$ 408,56;$ 487,13
+Ayuda en alimentación oral;21';7;$ 659,98;$ 953,32;$ 953,32;$ 1.136,64
+Ayuda en higiene parcial;21';7;$ 659,98;$ 953,32;$ 953,32;$ 1.136,64
+Ayuda en la marcha;12';4;$ 377,13;$ 544,75;$ 544,75;$ 649,51
+Baño de ducha o bañera;21;7;$ 659,98;$ 953,32;$ 953,32;$ 1.136,64
+Baño Parcial en cama;21';7;$ 659,98;$ 953,32;$ 953,32;$ 1.136,64
+Baño total en Cama;30';10;$ 942,83;$ 1.361,88;$ 1.361,88;$ 1.623,77
+Cambio de decúbito;45';15;$ 1.414,24;$ 2.042,82;$ 2.042,82;$ 2.435,65
+Cambio de frasco;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Cambio de pañal;21';7;$ 659,98;$ 953,32;$ 953,32;$ 1.136,64
+Cambio de traqueflex;15';5;$ 471,41;$ 680,94;$ 680,94;$ 811,88
+Cambios de posición;15';5;$ 471,41;$ 680,94;$ 680,94;$ 811,88
+Colocación  de gotas oftálmicas;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Colocación de bolsa de colostomía;12';4;$ 377,13;$ 544,75;$ 544,75;$ 649,51
+Colocación de bolsa de ileostomía;12';4;$ 377,13;$ 544,75;$ 544,75;$ 649,51
+Colocación de bolsa recolectora de orina;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Colocación de chata;18';6;$ 565,70;$ 817,13;$ 817,13;$ 974,26
+Colocación de elementos de confort;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Colocación de gotas óticas;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Colocación de orinal;18';6;$ 565,70;$ 817,13;$ 817,13;$ 974,26
+Colocación de parches ;15';5;$ 471,41;$ 680,94;$ 680,94;$ 811,88
+Colocación de sonda nasogástrica;21';7;$ 659,98;$ 953,32;$ 953,32;$ 1.136,64
+Colocación de sonda nasoyeyunal *;21';7;$ 659,98;$ 953,32;$ 953,32;$ 1.136,64
+Colocación de sonda orofaríngea-;21';7;$ 659,98;$ 953,32;$ 953,32;$ 1.136,64
+Colocación de sonda vesical;27';9;$ 848,54;$ 1.225,69;$ 1.225,69;$ 1.461,39
+Colocación de urodrop;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Colocación de venoclisis;30';10;$ 942,83;$ 1.361,88;$ 1.361,88;$ 1.623,77
+Confección de registros;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Consejería en lactancia materna;21';7;$ 659,98;$ 953,32;$ 953,32;$ 1.136,64
+Control de Glucotest;3';1;$ 94,28;$ 136,19;$ 136,19;$ 162,38
+Control de débito de fistulas;15';5;$ 471,41;$ 680,94;$ 680,94;$ 811,88
+Control de Goteo;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Control de modalidad de ventiladores ;45';15;$ 1.414,24;$ 2.042,82;$ 2.042,82;$ 2.435,65
+Control de peso;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Control de Presión Venosa Central;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Control de talla;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Cuidado de colostomía;21';7;$ 659,98;$ 953,32;$ 953,32;$ 1.136,64
+Cuidado de nefrectomía;15';5;$ 471,41;$ 680,94;$ 680,94;$ 811,88
+Cuidado de pie diabético;45';15;$ 1.414,24;$ 2.042,82;$ 2.042,82;$ 2.435,65
+Cuidado del paciente con EPOC;30';10;$ 942,83;$ 1.361,88;$ 1.361,88;$ 1.623,77
+Cuidado paciente traqueostomizado;24';8;$ 754,26;$ 1.089,50;$ 1.089,50;$ 1.299,01
+Cuidado posmorten en domicilio;45';15;$ 1.414,24;$ 2.042,82;$ 2.042,82;$ 2.435,65
+Cuidados al paciente en AMR;45';15;$ 1.414,24;$ 2.042,82;$ 2.042,82;$ 2.435,65
+Cuidados al pte. pos-quimio;15';5;$ 471,41;$ 680,94;$ 680,94;$ 811,88
+Cuidados de los avenamientos pleurales;15';5;$ 471,41;$ 680,94;$ 680,94;$ 811,88
+Cuidados de los drenajes abdominales;15';5;$ 471,41;$ 680,94;$ 680,94;$ 811,88
+Curación compleja;30';10;$ 942,83;$ 1.361,88;$ 1.361,88;$ 1.623,77
+Curación de absesos;21';7;$ 659,98;$ 953,32;$ 953,32;$ 1.136,64
+Curación de escaras por dec. Compleja;30';10;$ 942,83;$ 1.361,88;$ 1.361,88;$ 1.623,77
+Curación de escaras por decúbito;21';7;$ 659,98;$ 953,32;$ 953,32;$ 1.136,64
+Curación de forúnculo;21';7;$ 659,98;$ 953,32;$ 953,32;$ 1.136,64
+Curación de port;15';5;$ 471,41;$ 680,94;$ 680,94;$ 811,88
+Curación de vía central ;15';5;$ 471,41;$ 680,94;$ 680,94;$ 811,88
+Curación simple;18';6;$ 565,70;$ 817,13;$ 817,13;$ 974,26
+Diálisis Peritoneal;90';30;$ 2.828,48;$ 4.085,64;$ 4.085,64;$ 4.871,30
+Drenaje Postural;9';3;$ 282,85;$ 408,56;$ 408,56;$ 487,13
+Educación al paciente y familiar;45';15;$ 1.414,24;$ 2.042,82;$ 2.042,82;$ 2.435,65
+Ejercicio activos y pasos de rehabilitación            ;45';15;$ 1.414,24;$ 2.042,82;$ 2.042,82;$ 2.435,65
+Ejercicios Respiratorios;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Enema de Murphy;30';10;$ 942,83;$ 1.361,88;$ 1.361,88;$ 1.623,77
+Enema evacuante;21';7;$ 659,98;$ 953,32;$ 953,32;$ 1.136,64
+Entrevista al paciente;15';5;$ 471,41;$ 680,94;$ 680,94;$ 811,88
+Extracción de puntos de sutura;12';4;$ 377,13;$ 544,75;$ 544,75;$ 649,51
+Extracción de sangre *;15';5;$ 471,41;$ 680,94;$ 680,94;$ 811,88
+Faja de cuerpo;12';4;$ 377,13;$ 544,75;$ 544,75;$ 649,51
+Lavado de boca ;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Lavado de cabello;21';7;$ 659,98;$ 953,32;$ 953,32;$ 1.136,64
+Lavado de oído;9';3;$ 282,85;$ 408,56;$ 408,56;$ 487,13
+Lavado de sonda vesical;30';10;$ 942,83;$ 1.361,88;$ 1.361,88;$ 1.623,77
+Lavajes vaginales con medicamentos;45';15;$ 1.414,24;$ 2.042,82;$ 2.042,82;$ 2.435,65
+Medicación intravenosa por goteo;45';15;$ 1.414,24;$ 2.042,82;$ 2.042,82;$ 2.435,65
+Medicación por Tubuladura y/o colateral;9';3;$ 282,85;$ 408,56;$ 408,56;$ 487,13
+Medicación Vía Cutánea;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Medicación Vía Intradérmica;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Medicación Vía Intramuscular;15';5;$ 471,41;$ 680,94;$ 680,94;$ 811,88
+Medicación Vía Intravenosa;15';5;$ 471,41;$ 680,94;$ 680,94;$ 811,88
+Medicación Vía Nasal;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Medicación Vía Oral;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Medicación Vía Rectal;9';3;$ 282,85;$ 408,56;$ 408,56;$ 487,13
+Medicación Vía Subcutánea;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Medicación Vía Sublingual;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Medicación Vía Vaginal;9';3;$ 282,85;$ 408,56;$ 408,56;$ 487,13
+Medición de micción horaria;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Nebulizaciones;12';4;$ 377,13;$ 544,75;$ 544,75;$ 649,51
+Oxígeno por bigotera;12';4;$ 377,13;$ 544,75;$ 544,75;$ 649,51
+Oxígeno por máscara;12';4;$ 377,13;$ 544,75;$ 544,75;$ 649,51
+Oxígeno por traqueóstomía;12';4;$ 377,13;$ 544,75;$ 544,75;$ 649,51
+Pesaje de pañales en lactantes;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Rasurado Higiénico;9';3;$ 282,85;$ 408,56;$ 408,56;$ 487,13
+Saturometría;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Sujeción de paciente;12';4;$ 377,13;$ 544,75;$ 544,75;$ 649,51
+Traslado de cama a camilla;12';4;$ 377,13;$ 544,75;$ 544,75;$ 649,51
+Tratamiento de Escabiosis;30';10;$ 942,83;$ 1.361,88;$ 1.361,88;$ 1.623,77
+Tratamiento de Impétigo;30';10;$ 942,83;$ 1.361,88;$ 1.361,88;$ 1.623,77
+Tratamiento de Pediculosis;21';7;$ 659,98;$ 953,32;$ 953,32;$ 1.136,64
+Valoración de  la Diuresis;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Valoración de la función respiratoria adul;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Valoración de la función respiratoria ped.;12';4;$ 377,13;$ 544,75;$ 544,75;$ 649,51
+Valoración de las  deposiciones;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Valoración de permeabilidad de catéter;9';3;$ 282,85;$ 408,56;$ 408,56;$ 487,13
+Valoración de Signos Vitales;18';6;$ 565,70;$ 817,13;$ 817,13;$ 974,26
+Valoración de temperatura;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Valoración de Tensión Arterial;9';3;$ 282,85;$ 408,56;$ 408,56;$ 487,13
+Valoración del dolor;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Valoración del estado de conciencia;12';4;$ 377,13;$ 544,75;$ 544,75;$ 649,51
+Valoración del signo de Godet;6';2;$ 188,57;$ 272,38;$ 272,38;$ 324,75
+Vendaje elástico/elástico;9';3;$ 282,85;$ 408,56;$ 408,56;$ 487,13
+Visita Domiciliaria;21';7;$ 659,98;$ 953,32;$ 953,32;$ 1.136,64
+Auditoria del Cuidado de pacientes de baja complejdad;;;;;;$ 1.859,29
+;;;;;;
+Auditoria del Cuidado de pacientes de mediana complejidad;;;;;;$ 2.538,82
+;;;;;;
+Auditoria del Cuidado de pacientes de alta complejidad;;;;;; $ 	3.036,68 
+;;;;;;
+;;;;;;
+* NO INCLUYE INSUMOS;;;;;;

@@ -1,3 +1,5 @@
+import { plainText } from "@/lib/rich-text";
+import { RichText } from "@/components/rich-text";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -36,7 +38,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         <div className="mx-auto max-w-2xl px-5 sm:px-8">
           <Link href="/novedades" className="text-xs font-bold uppercase tracking-widest text-cpe-mint">← Volver a novedades</Link>
           <p className="mt-4 text-xs font-bold uppercase tracking-[.2em] text-cpe-gold">{n.categoria}</p>
-          <h1 className="mt-2 font-display text-xl font-semibold leading-tight sm:text-2xl">{n.titulo}</h1>
+          <h1 className="mt-2 font-display text-xl font-semibold leading-tight sm:text-2xl"><RichText value={n.titulo} /></h1>
           <p className="mt-2 text-sm text-white/60">{formatFecha(n.publicadoEn)}</p>
         </div>
       </header>
@@ -48,11 +50,11 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           </div>
         )}
 
-        <p className="font-display text-2xl leading-9 text-cpe-navy">{n.resumen}</p>
+        <p className="font-display text-2xl leading-9 text-cpe-navy"><RichText value={n.resumen} /></p>
 
         {n.contenido && (
           <div className="mt-8 space-y-5 leading-7 text-slate-700">
-            {n.contenido.split("\n").filter((p) => p.trim()).map((parrafo, i) => <p key={i}>{parrafo}</p>)}
+            <RichText value={n.contenido} />
           </div>
         )}
 
@@ -85,7 +87,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         )}
 
         <div className="mt-12 border-t border-slate-200 pt-8">
-          <CompartirRedes titulo={n.titulo} />
+          <CompartirRedes titulo={plainText(n.titulo)} />
         </div>
       </div>
     </article>

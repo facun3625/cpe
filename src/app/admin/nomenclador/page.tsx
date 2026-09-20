@@ -1,39 +1,30 @@
+import { plainText } from "@/lib/rich-text";
 import { prisma } from "@/lib/prisma";
-import { AdminTable, NewButton, PageHeader, TextInput } from "@/components/admin/fields";
-import { NomencladorFila } from "@/components/admin/nomenclador-fila";
-import { formatFechaHora } from "@/lib/format";
-import { deleteNomencladorItem, updateMontoNomenclador } from "./actions";
+import { PageHeader, TextInput } from "@/components/admin/fields";
+import { NomencladorCarga } from "@/components/admin/nomenclador-carga";
+import { readNomencladorConfig, AMBITOS } from "@/lib/nomenclador/config";
+import { formatearMoneda } from "@/components/nomenclador/data";
 
 export default async function AdminNomencladorPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   const { q } = await searchParams;
-  const items = await prisma.nomencladorItem.findMany({
-    where: q ? { nombre: { contains: q, mode: "insensitive" } } : undefined,
-    orderBy: { orden: "asc" },
-  });
-
-  return (
-    <div>
-      <PageHeader title="Nomenclador" action={<NewButton href="/admin/nomenclador/nueva">+ Nueva prestación</NewButton>} />
-      <p className="mt-2 text-sm text-slate-500">{items.length} prestaciones {q ? `que coinciden con "${q}"` : "en total"}.</p>
-      <form className="mt-4">
-        <TextInput name="q" defaultValue={q ?? ""} placeholder="Buscar por nombre…" />
-      </form>
-      <p className="mt-4 text-xs text-slate-400">
-        Los montos (CD, CN/DD, DN) se editan directamente en la tabla: cambiá el valor y presioná <span className="font-semibold text-slate-500">Guardar</span> (o Enter).
-      </p>
-      <AdminTable
-        head={["Prestación", "Tiempo", "CD", "CN/DD", "DN", "Actualizado"]}
-        empty={items.length === 0 ? "No se encontraron prestaciones." : undefined}
-      >
-        {items.map((i) => (
-          <NomencladorFila
-            key={i.id}
-            item={{ id: i.id, nombre: i.nombre, tiempo: i.tiempo, cd: i.cd, cn: i.cn, dn: i.dn, actualizadoDisplay: formatFechaHora(i.updatedAt) }}
-            updateAction={updateMontoNomenclador}
-            deleteAction={deleteNomencladorItem}
-          />
-        ))}
-      </AdminTable>
-    </div>
-  );
+  const [allItems, registro] = await Promise.all([
+    prisma.nomencladorItem.findMany({ orderBy: { orden: "asc" } }),
+    prisma.paginaTexto.findUnique({ where: { pagina: "nomenclador" } }),
+  ]);
+  const items = q ? allItems.filter((item) => plainText(item.nombre).toLocaleLowerCase("es").includes(q.toLocaleLowerCase("es"))) : allItems;
+  const config = readNomencladorConfig(registro?.contenido);
+  return <div>
+    <PageHeader title="Nomenclador" />
+    <NomencladorCarga config={config} />
+    <h2 className="mt-8 text-lg font-bold text-cpe-navy">Prestaciones publicadas</h2>
+    <p className="mt-2 text-sm text-slate-500">{items.length} prestaciones {q ? `que coinciden con "${q}"` : "en total"}. Para actualizar los precios, cargá una nueva planilla.</p>
+    <form className="mt-4 flex gap-2"><TextInput name="q" defaultValue={q ?? ""} placeholder="Buscar por nombre…" /><button className="rounded-xl bg-slate-100 px-4 text-sm font-semibold">Buscar</button></form>
+    <div className="mt-4 overflow-x-auto rounded-2xl border border-slate-200 bg-white"><table className="w-full text-left text-sm">
+      <thead className="bg-slate-50 text-xs text-slate-500"><tr>{["Prestación", "Tiempo", "UPE", "CD", "CN", "DD", "DN"].map((label) => <th key={label} className="px-4 py-3">{label}</th>)}</tr></thead>
+      <tbody>{items.map((item) => <tr key={item.id} className="border-t border-slate-100">
+        <td className="min-w-56 px-4 py-3 font-medium text-slate-800">{plainText(item.nombre)}{item.noReconocida && " *"}</td><td className="px-4">{item.tiempo}</td><td className="px-4">{item.upe}</td>
+        {AMBITOS.map(({ key }) => <td key={key} className="whitespace-nowrap px-4">{formatearMoneda(item[key] ?? item.cn)}</td>)}
+      </tr>)}{!items.length && <tr><td colSpan={7} className="p-6 text-center text-slate-500">No hay prestaciones para mostrar.</td></tr>}</tbody>
+    </table></div>
+  </div>;
 }

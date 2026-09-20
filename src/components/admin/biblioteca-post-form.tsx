@@ -1,3 +1,4 @@
+import { plainText } from "@/lib/rich-text";
 import { Field, TextInput, TextArea, Select, SubmitButton, Card } from "@/components/admin/fields";
 import { ImagenPortadaInput, ArchivoUnicoInput } from "@/components/admin/media-inputs";
 
@@ -34,7 +35,7 @@ export function BibliotecaPostForm({
           </Field>
 
           <Field label="Título">
-            <TextInput name="titulo" required defaultValue={defaultValues?.titulo} />
+            <TextInput rich name="titulo" required defaultValue={defaultValues?.titulo} />
           </Field>
 
           <Field label="Bajada" hint="Resumen corto que se muestra en la card">
@@ -52,7 +53,7 @@ export function BibliotecaPostForm({
       </Card>
 
       <Card title="Bibliografía" hint="Opcional — el PDF que se podrá descargar desde la card">
-        <ArchivoUnicoInput name="archivo" accept="application/pdf" defaultUrl={defaultValues?.archivoUrl} defaultNombre={defaultValues?.titulo} />
+        <ArchivoUnicoInput name="archivo" accept="application/pdf" defaultUrl={defaultValues?.archivoUrl} defaultNombre={plainText(defaultValues?.titulo)} />
       </Card>
 
       <Card title="Publicación">

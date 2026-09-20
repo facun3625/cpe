@@ -33,7 +33,7 @@ export function NovedadForm({
       <Card title="Contenido">
         <div className="space-y-5">
           <Field label="Título">
-            <TextInput name="titulo" required defaultValue={defaultValues?.titulo} />
+            <TextInput rich name="titulo" required defaultValue={defaultValues?.titulo} />
           </Field>
 
           <Field label="Resumen" hint="Se muestra en las cards y como bajada del artículo">

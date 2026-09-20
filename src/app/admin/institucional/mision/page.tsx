@@ -1,5 +1,6 @@
+import { joinRichTextLines } from "@/lib/rich-text";
 import { prisma } from "@/lib/prisma";
-import { Field, TextInput, TextArea, SubmitButton } from "@/components/admin/fields";
+import { Field, TextArea, SubmitButton } from "@/components/admin/fields";
 import { InstitucionalNav } from "@/components/admin/institucional-nav";
 import { guardarMision } from "./actions";
 
@@ -35,7 +36,7 @@ export default async function AdminMisionPage() {
           <TextArea name="visionTexto" rows={3} defaultValue={c.visionTexto} />
         </Field>
         <Field label="Propósitos (uno por línea)">
-          <TextArea name="propositos" rows={5} defaultValue={c.propositos.join("\n")} />
+          <TextArea name="propositos" rows={5} defaultValue={joinRichTextLines(c.propositos)} />
         </Field>
         <SubmitButton>Guardar cambios</SubmitButton>
       </form>

@@ -38,7 +38,7 @@ export function AutoridadForm({
         <TextInput name="nombre" required defaultValue={defaultValues?.nombre} placeholder="Azoge, Carlos Luis Rubén" />
       </Field>
       <Field label="Cargo (solo para Consejo directivo o Síndicos, ej. «Presidente»)">
-        <TextInput name="rol" defaultValue={defaultValues?.rol ?? ""} />
+        <TextInput rich name="rol" defaultValue={defaultValues?.rol ?? ""} />
       </Field>
       <Field label="Foto" hint="Se muestra en la tarjeta del Consejo directivo. Podés cargarla, reemplazarla o quitarla.">
         <ImagenPortadaInput name="foto" defaultUrl={defaultValues?.fotoUrl} />

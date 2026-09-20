@@ -14,7 +14,7 @@ export function NomencladorItemForm({
   return (
     <form action={action} className="max-w-xl space-y-5">
       <Field label="Nombre de la prestación">
-        <TextInput name="nombre" required defaultValue={defaultValues?.nombre} />
+        <TextInput rich name="nombre" required defaultValue={defaultValues?.nombre} />
       </Field>
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="Tiempo (ej. «15'»)">

@@ -1,5 +1,7 @@
 "use client";
 
+import { plainText } from "@/lib/rich-text";
+
 import { useState } from "react";
 import { RowActions } from "@/components/admin/fields";
 
@@ -110,7 +112,7 @@ export function NomencladorFila({
 
   return (
     <tr className={dirty ? "bg-amber-50/30" : undefined}>
-      <td className="px-4 py-3 font-medium text-gray-900">{item.nombre}</td>
+      <td className="px-4 py-3 font-medium text-gray-900">{plainText(item.nombre)}</td>
       <td className="px-4 py-3 text-gray-600">{item.tiempo}</td>
       {(["cd", "cn", "dn"] as const).map((campo) => (
         <td key={campo} className="px-4 py-2">

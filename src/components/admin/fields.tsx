@@ -1,8 +1,9 @@
+import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { DeleteButton } from "@/components/admin/delete-button";
 
 export function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
-    <div>
+    <div role="group" aria-label={label}>
       <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">{label}</label>
       <div className="mt-2">{children}</div>
       {hint && <p className="mt-1.5 text-xs text-slate-400">{hint}</p>}
@@ -13,11 +14,13 @@ export function Field({ label, hint, children }: { label: string; hint?: string;
 const inputClass =
   "w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-800 shadow-sm transition placeholder:text-slate-400 focus:border-cpe-royal focus:outline-none focus:ring-4 focus:ring-cpe-royal/10";
 
-export function TextInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
+export function TextInput({ rich = false, ...props }: React.InputHTMLAttributes<HTMLInputElement> & { rich?: boolean }) {
+  if (rich) return <RichTextEditor name={props.name} defaultValue={props.defaultValue} required={props.required} placeholder={props.placeholder} disabled={props.disabled} />;
   return <input {...props} className={inputClass} />;
 }
 
-export function TextArea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
+export function TextArea({ rich = true, ...props }: React.TextareaHTMLAttributes<HTMLTextAreaElement> & { rich?: boolean }) {
+  if (rich) return <RichTextEditor name={props.name} defaultValue={props.defaultValue} required={props.required} placeholder={props.placeholder} rows={props.rows} disabled={props.disabled} />;
   return <textarea {...props} className={inputClass} />;
 }
 

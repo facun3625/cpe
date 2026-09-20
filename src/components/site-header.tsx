@@ -23,7 +23,7 @@ const NAV_LINKS: NavLink[] = [
     ],
   },
   { href: "/dictamenes", label: "Dictámenes" },
-  { href: "/matriculados", label: "Matriculados Activos" },
+  { href: "/matriculados", label: "Mat. Activos" },
   { href: "/novedades", label: "Novedades" },
   { href: "/nomenclador", label: "Nomenclador" },
   { href: "/tramites", label: "Trámites" },
@@ -71,7 +71,7 @@ export function SiteHeader({ novedadCategorias = [] }: { novedadCategorias?: str
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-cpe-royal/95 text-white backdrop-blur-xl">
-      <div className="bg-cpe-navy text-white"><div className="mx-auto flex h-9 max-w-7xl items-center justify-between px-5 text-[11px] font-semibold tracking-wide sm:px-8"><Link href="/login" className="hidden text-white/65 transition hover:text-white sm:block">Acceso administradores</Link><div className="ml-auto flex items-center gap-3 sm:gap-5"><a href="mailto:colegioenfermeros@gmail.com" className="hidden text-white/70 transition hover:text-white md:block">colegioenfermeros@gmail.com</a><Link href="/contacto" className="hidden text-white/70 transition hover:text-white sm:block">Contacto</Link><a href="https://cpesag.com.ar" target="_blank" rel="noreferrer" className="whitespace-nowrap text-white transition hover:text-white/80">Ingresar al SAG ↗</a><SocialLinks className="border-l border-white/15 pl-3 text-white sm:pl-5" /></div></div></div>
+      <div className="bg-cpe-navy text-white"><div className="mx-auto flex h-9 max-w-7xl items-center justify-between px-5 text-[11px] font-semibold tracking-wide sm:px-8"><Link href="/login" className="hidden text-white/65 transition hover:text-white sm:block">Acceso administradores</Link><div className="ml-auto flex items-center gap-3 sm:gap-5"><a href="mailto:colegioenfermeros@gmail.com" className="hidden text-white/70 transition hover:text-white md:block">colegioenfermeros@gmail.com</a><Link href="/contacto" className="hidden text-white/70 transition hover:text-white sm:block">Contacto</Link><a href="https://cpesag.com.ar" target="_blank" rel="noreferrer" className="whitespace-nowrap text-white transition hover:text-white/80">Ingresar al SAG ↗</a><SiteSearch compact /><SocialLinks className="border-l border-white/15 pl-3 text-white sm:pl-5" /></div></div></div>
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:h-24 sm:px-8 xl:h-[104px]">
         <Link href="/" onClick={() => setOpen(false)} className="relative z-10 shrink-0"><Image src="/logo_final.png" alt="CPE Santa Fe" width={885} height={256} priority className="h-14 w-auto object-contain object-left sm:h-16 xl:h-[76px]" /></Link>
         <nav ref={navRef} className="hidden items-center gap-1 xl:flex" aria-label="Navegación principal">
@@ -125,7 +125,6 @@ export function SiteHeader({ novedadCategorias = [] }: { novedadCategorias?: str
           })}
         </nav>
         <div className="flex shrink-0 items-center gap-2">
-          <SiteSearch />
           <button
             type="button"
             onClick={() => setOpen((prev) => { if (prev) setMobileOpen(null); return !prev; })}

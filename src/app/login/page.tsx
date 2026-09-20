@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 
@@ -11,7 +11,7 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") ?? "/admin";
 
-  const [email, setEmail] = useState("");
+  const emailRef = useRef<HTMLInputElement>(null);
   const [password, setPassword] = useState("");
   const [recordar, setRecordar] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -20,8 +20,7 @@ function LoginForm() {
   useEffect(() => {
     try {
       const guardado = localStorage.getItem(EMAIL_GUARDADO_KEY);
-      if (guardado) setEmail(guardado);
-      else setRecordar(true);
+      if (guardado && emailRef.current) emailRef.current.value = guardado;
     } catch {}
   }, []);
 
@@ -30,6 +29,7 @@ function LoginForm() {
     setError(null);
     setLoading(true);
 
+    const email = emailRef.current?.value ?? "";
     const result = await signIn("credentials", {
       email,
       password,
@@ -77,8 +77,7 @@ function LoginForm() {
             name="email"
             autoComplete="username"
             required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            ref={emailRef}
             className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
           />
         </div>

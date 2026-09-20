@@ -1,3 +1,4 @@
+import { joinRichTextLines } from "@/lib/rich-text";
 import { Field, TextInput, TextArea, SubmitButton } from "@/components/admin/fields";
 
 type TramiteFormValues = { titulo?: string; texto?: string; requisitos?: string[]; orden?: number; slug?: string };
@@ -14,13 +15,13 @@ export function TramiteForm({
   return (
     <form action={action} className="max-w-xl space-y-5">
       <Field label="Título">
-        <TextInput name="titulo" required defaultValue={defaultValues?.titulo} />
+        <TextInput rich name="titulo" required defaultValue={defaultValues?.titulo} />
       </Field>
       <Field label="Texto">
         <TextArea name="texto" rows={3} required defaultValue={defaultValues?.texto} />
       </Field>
       <Field label="Requisitos (uno por línea)">
-        <TextArea name="requisitos" rows={5} defaultValue={(defaultValues?.requisitos ?? []).join("\n")} />
+        <TextArea name="requisitos" rows={5} defaultValue={joinRichTextLines((defaultValues?.requisitos ?? []))} />
       </Field>
       <Field label="Orden">
         <TextInput name="orden" type="number" defaultValue={defaultValues?.orden ?? 0} />

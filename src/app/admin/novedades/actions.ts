@@ -1,5 +1,7 @@
 "use server";
 
+import { readRichText, plainText } from "@/lib/rich-text";
+
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -7,7 +9,7 @@ import { auth } from "@/auth";
 import { saveUploadedFile } from "@/lib/upload";
 
 function slugify(value: string) {
-  return value
+  return plainText(value)
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "")
     .toLowerCase()
@@ -61,9 +63,9 @@ async function resolverAdjuntosNuevos(formData: FormData) {
 export async function createNovedad(formData: FormData) {
   await requireSession();
 
-  const titulo = String(formData.get("titulo") ?? "").trim();
-  const resumen = String(formData.get("resumen") ?? "").trim();
-  const contenido = String(formData.get("contenido") ?? "").trim();
+  const titulo = readRichText(formData.get("titulo"));
+  const resumen = readRichText(formData.get("resumen"));
+  const contenido = readRichText(formData.get("contenido"));
   const categoria = String(formData.get("categoria") ?? "Institucional").trim();
   const videoUrl = String(formData.get("videoUrl") ?? "").trim();
   const publicada = formData.get("publicada") === "on";
@@ -102,9 +104,9 @@ export async function createNovedad(formData: FormData) {
 export async function updateNovedad(id: string, formData: FormData) {
   await requireSession();
 
-  const titulo = String(formData.get("titulo") ?? "").trim();
-  const resumen = String(formData.get("resumen") ?? "").trim();
-  const contenido = String(formData.get("contenido") ?? "").trim();
+  const titulo = readRichText(formData.get("titulo"));
+  const resumen = readRichText(formData.get("resumen"));
+  const contenido = readRichText(formData.get("contenido"));
   const categoria = String(formData.get("categoria") ?? "Institucional").trim();
   const videoUrl = String(formData.get("videoUrl") ?? "").trim();
   const publicada = formData.get("publicada") === "on";

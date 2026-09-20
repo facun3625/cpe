@@ -1,5 +1,7 @@
 "use server";
 
+import { readRichText } from "@/lib/rich-text";
+
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -19,8 +21,8 @@ export async function createHito(formData: FormData) {
   await requireSession();
 
   const anio = String(formData.get("anio") ?? "").trim();
-  const titulo = String(formData.get("titulo") ?? "").trim();
-  const texto = String(formData.get("texto") ?? "").trim();
+  const titulo = readRichText(formData.get("titulo"));
+  const texto = readRichText(formData.get("texto"));
   const orden = Number(formData.get("orden") ?? 0);
 
   if (!anio || !titulo || !texto) throw new Error("Todos los campos son obligatorios");
@@ -35,8 +37,8 @@ export async function updateHito(id: string, formData: FormData) {
   await requireSession();
 
   const anio = String(formData.get("anio") ?? "").trim();
-  const titulo = String(formData.get("titulo") ?? "").trim();
-  const texto = String(formData.get("texto") ?? "").trim();
+  const titulo = readRichText(formData.get("titulo"));
+  const texto = readRichText(formData.get("texto"));
   const orden = Number(formData.get("orden") ?? 0);
 
   if (!anio || !titulo || !texto) throw new Error("Todos los campos son obligatorios");

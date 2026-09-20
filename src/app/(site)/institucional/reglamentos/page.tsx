@@ -1,3 +1,4 @@
+import { RichText } from "@/components/rich-text";
 import { Accordion } from "@/components/accordion";
 import { InternalPage } from "@/components/internal-page";
 import { prisma } from "@/lib/prisma";
@@ -44,7 +45,7 @@ export default async function Page() {
                 <li key={doc.id} className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex items-center gap-3">
                     <IconDoc />
-                    <span className="font-medium text-cpe-navy">{doc.titulo}</span>
+                    <span className="font-medium text-cpe-navy"><RichText value={doc.titulo} /></span>
                   </div>
                   {doc.archivoUrl ? (
                     <a

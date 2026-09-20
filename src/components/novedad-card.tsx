@@ -1,3 +1,4 @@
+import { RichText } from "@/components/rich-text";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -41,7 +42,7 @@ export function NovedadCard({ novedad }: { novedad: Novedad }) {
       </div>
       <div className="flex flex-1 flex-col p-4">
         <h3 className="line-clamp-2 font-semibold text-cpe-navy">
-          {novedad.titulo}
+          <RichText value={novedad.titulo} />
         </h3>
         <p className="mt-2 text-xs text-gray-500">
           {formatFecha(novedad.publicadoEn)}

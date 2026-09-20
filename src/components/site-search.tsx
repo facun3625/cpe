@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { buscarGlobal, type ResultadoBusqueda } from "@/app/buscar-actions";
 
 function IconSearch() {
@@ -21,7 +21,7 @@ function IconClose() {
   );
 }
 
-export function SiteSearch() {
+export function SiteSearch({ compact = false }: { compact?: boolean }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [resultados, setResultados] = useState<ResultadoBusqueda[]>([]);
@@ -31,58 +31,72 @@ export function SiteSearch() {
   const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const requestId = useRef(0);
 
+  const resetSearch = useCallback(() => {
+    requestId.current++;
+    setQuery("");
+    setResultados([]);
+    setCargando(false);
+    setActivo(0);
+  }, []);
+
+  const closeSearch = useCallback(() => {
+    setOpen(false);
+    resetSearch();
+  }, [resetSearch]);
+
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         setOpen((o) => !o);
+        resetSearch();
       } else if (e.key === "Escape") {
-        setOpen(false);
+        closeSearch();
       }
     }
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [closeSearch, resetSearch]);
 
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-      setTimeout(() => inputRef.current?.focus(), 50);
-    } else {
-      document.body.style.overflow = "";
-      setQuery("");
-      setResultados([]);
-      setActivo(0);
-    }
+    if (!open) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const timer = setTimeout(() => inputRef.current?.focus(), 50);
     return () => {
-      document.body.style.overflow = "";
+      clearTimeout(timer);
+      document.body.style.overflow = previousOverflow;
     };
   }, [open]);
 
   useEffect(() => {
     const q = query.trim();
-    if (q.length < 2) {
-      setResultados([]);
-      setCargando(false);
-      return;
-    }
-    setCargando(true);
-    const id = ++requestId.current;
+    if (!open || q.length < 2) return;
+    const id = requestId.current;
+    let cancelled = false;
     const timer = setTimeout(async () => {
-      const res = await buscarGlobal(q);
-      if (id === requestId.current) {
-        setResultados(res);
-        setActivo(0);
-        setCargando(false);
+      try {
+        const res = await buscarGlobal(q);
+        if (!cancelled && id === requestId.current) {
+          setResultados(res);
+          setActivo(0);
+        }
+      } catch {
+        if (!cancelled && id === requestId.current) setResultados([]);
+      } finally {
+        if (!cancelled && id === requestId.current) setCargando(false);
       }
     }, 220);
-    return () => clearTimeout(timer);
-  }, [query]);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [query, open]);
 
   function onKeyDownInput(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setActivo((a) => Math.min(a + 1, resultados.length - 1));
+      setActivo((a) => Math.max(0, Math.min(a + 1, resultados.length - 1)));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setActivo((a) => Math.max(a - 1, 0));
@@ -98,13 +112,17 @@ export function SiteSearch() {
         type="button"
         onClick={() => setOpen(true)}
         aria-label="Buscar en el sitio"
-        className="grid h-11 w-11 shrink-0 cursor-pointer place-items-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20"
+        className={
+          compact
+            ? "grid h-6 w-6 shrink-0 cursor-pointer place-items-center rounded-full text-white/70 transition hover:text-white"
+            : "grid h-11 w-11 shrink-0 cursor-pointer place-items-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20"
+        }
       >
         <IconSearch />
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-[70] flex justify-center bg-cpe-navy/70 px-4 pt-20 backdrop-blur-sm sm:pt-28" onClick={() => setOpen(false)}>
+        <div className="fixed inset-0 z-[70] flex justify-center bg-cpe-navy/70 px-4 pt-20 backdrop-blur-sm sm:pt-28" onClick={closeSearch}>
           <div
             className="h-fit w-full max-w-2xl overflow-hidden rounded-3xl bg-white shadow-2xl"
             onClick={(e) => e.stopPropagation()}
@@ -115,14 +133,20 @@ export function SiteSearch() {
                 ref={inputRef}
                 type="text"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => {
+                  requestId.current++;
+                  setQuery(e.target.value);
+                  setResultados([]);
+                  setActivo(0);
+                  setCargando(e.target.value.trim().length >= 2);
+                }}
                 onKeyDown={onKeyDownInput}
                 placeholder="Buscar novedades, trámites, matriculados, prestaciones…"
                 className="min-w-0 flex-1 text-[15px] text-cpe-navy outline-none placeholder:text-slate-400"
               />
               <button
                 type="button"
-                onClick={() => setOpen(false)}
+                onClick={closeSearch}
                 aria-label="Cerrar búsqueda"
                 className="grid h-8 w-8 shrink-0 cursor-pointer place-items-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
               >
@@ -152,7 +176,7 @@ export function SiteSearch() {
                           itemRefs.current[i] = el;
                         }}
                         href={r.href}
-                        onClick={() => setOpen(false)}
+                        onClick={closeSearch}
                         onMouseEnter={() => setActivo(i)}
                         className={`flex items-center justify-between gap-4 px-5 py-3 transition ${i === activo ? "bg-cpe-bg" : ""}`}
                       >

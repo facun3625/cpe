@@ -1,3 +1,4 @@
+import { RichText } from "@/components/rich-text";
 import { InternalPage } from "@/components/internal-page";
 import { prisma } from "@/lib/prisma";
 
@@ -32,13 +33,13 @@ export default async function Page() {
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="rounded-3xl bg-cpe-navy p-8 text-white sm:p-10">
           <p className="text-xs font-bold uppercase tracking-[.22em] text-cpe-mint">Misión</p>
-          <p className="mt-6 text-xl font-semibold leading-8 sm:text-2xl">{contenido.misionTitulo}</p>
-          <p className="mt-5 leading-7 text-white/70">{contenido.misionTexto}</p>
+          <p className="mt-6 text-xl font-semibold leading-8 sm:text-2xl"><RichText value={contenido.misionTitulo} /></p>
+          <p className="mt-5 leading-7 text-white/70"><RichText value={contenido.misionTexto} /></p>
         </div>
         <div className="rounded-3xl bg-white p-8 shadow-sm sm:p-10">
           <p className="text-xs font-bold uppercase tracking-[.22em] text-cpe-coral">Visión</p>
-          <p className="mt-6 text-xl font-semibold leading-8 text-cpe-navy sm:text-2xl">{contenido.visionTitulo}</p>
-          <p className="mt-5 leading-7 text-slate-600">{contenido.visionTexto}</p>
+          <p className="mt-6 text-xl font-semibold leading-8 text-cpe-navy sm:text-2xl"><RichText value={contenido.visionTitulo} /></p>
+          <p className="mt-5 leading-7 text-slate-600"><RichText value={contenido.visionTexto} /></p>
         </div>
       </div>
 
@@ -48,7 +49,7 @@ export default async function Page() {
           {contenido.propositos.map((proposito, index) => (
             <div key={proposito} className="rounded-2xl bg-cpe-bg p-5">
               <span className="text-xs font-bold text-cpe-navy/40">{String(index + 1).padStart(2, "0")}</span>
-              <p className="mt-3 text-sm font-semibold leading-5 text-cpe-navy">{proposito}</p>
+              <p className="mt-3 text-sm font-semibold leading-5 text-cpe-navy"><RichText value={proposito} /></p>
             </div>
           ))}
         </div>

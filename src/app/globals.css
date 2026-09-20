@@ -56,3 +56,15 @@ body {
 html { scroll-behavior: smooth; scroll-padding-top: 120px; }
 ::selection { background: #8bd2c5; color: #082f3b; }
 button, a { -webkit-tap-highlight-color: transparent; }
+
+/* Shared editor/public typography; all content passes through the allowlist. */
+.rich-text { overflow-wrap: anywhere; }
+.rich-text-paragraph { display: block; min-height: 1em; }
+.rich-text-paragraph + .rich-text-paragraph { margin-top: 0.65em; }
+.rich-text a, .rich-editor-content a { text-decoration: underline; text-underline-offset: 0.15em; }
+.rich-text a:hover { opacity: 0.8; }
+.rich-text strong, .rich-text b, .rich-editor-content strong { font-weight: 700; }
+.rich-text em, .rich-text i, .rich-editor-content em { font-style: italic; }
+.rich-text u, .rich-editor-content u { text-decoration: underline; }
+.rich-editor-content p + p { margin-top: 0.65em; }
+.rich-editor-content { overflow-wrap: anywhere; }

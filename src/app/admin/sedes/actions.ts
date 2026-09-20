@@ -1,5 +1,7 @@
 "use server";
 
+import { readRichText } from "@/lib/rich-text";
+
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -23,10 +25,10 @@ function revalidateTodo() {
 export async function createSede(formData: FormData) {
   await requireSession();
 
-  const nombre = String(formData.get("nombre") ?? "").trim();
-  const direccion = String(formData.get("direccion") ?? "").trim();
+  const nombre = readRichText(formData.get("nombre"));
+  const direccion = readRichText(formData.get("direccion"));
   const telefonos = lineas(formData.get("telefonos"));
-  const horario = String(formData.get("horario") ?? "").trim();
+  const horario = readRichText(formData.get("horario"));
   const email = String(formData.get("email") ?? "").trim();
   const orden = Number(formData.get("orden") ?? 0);
 
@@ -41,10 +43,10 @@ export async function createSede(formData: FormData) {
 export async function updateSede(id: string, formData: FormData) {
   await requireSession();
 
-  const nombre = String(formData.get("nombre") ?? "").trim();
-  const direccion = String(formData.get("direccion") ?? "").trim();
+  const nombre = readRichText(formData.get("nombre"));
+  const direccion = readRichText(formData.get("direccion"));
   const telefonos = lineas(formData.get("telefonos"));
-  const horario = String(formData.get("horario") ?? "").trim();
+  const horario = readRichText(formData.get("horario"));
   const email = String(formData.get("email") ?? "").trim();
   const orden = Number(formData.get("orden") ?? 0);
 

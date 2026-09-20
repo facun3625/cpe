@@ -1,5 +1,7 @@
 "use server";
 
+import { plainText } from "@/lib/rich-text";
+
 import { prisma } from "@/lib/prisma";
 
 export type ResultadoBusqueda = {
@@ -37,7 +39,7 @@ const PAGINAS_ESTATICAS: ResultadoBusqueda[] = [
 
 /** Sin tildes/diacríticos y en minúsculas, para que "administracion" encuentre "Administración". */
 function normalizar(texto: string) {
-  return texto.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  return plainText(texto).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 }
 
 function coincide(q: string, ...campos: (string | null | undefined)[]) {
@@ -103,7 +105,7 @@ export async function buscarGlobal(query: string): Promise<ResultadoBusqueda[]> 
   const nomencladorRes: ResultadoBusqueda[] = nomencladorItems
     .filter((it) => coincide(q, it.nombre))
     .slice(0, 4)
-    .map((it) => ({ tipo: "Nomenclador", titulo: it.nombre, subtitulo: it.tiempo, href: `/nomenclador?q=${encodeURIComponent(it.nombre)}` }));
+    .map((it) => ({ tipo: "Nomenclador", titulo: it.nombre, subtitulo: it.tiempo, href: `/nomenclador?q=${encodeURIComponent(plainText(it.nombre))}` }));
 
   const matriculadosRes: ResultadoBusqueda[] = matriculados
     .filter((m) => coincide(q, m.apellido, m.nombre))
@@ -118,5 +120,5 @@ export async function buscarGlobal(query: string): Promise<ResultadoBusqueda[]> 
   return [...paginas, ...novedadesRes, ...documentosRes, ...tramitesRes, ...comisionesRes, ...sedesRes, ...nomencladorRes, ...matriculadosRes].slice(
     0,
     24
-  );
+  ).map((resultado) => ({ ...resultado, titulo: plainText(resultado.titulo), subtitulo: resultado.subtitulo ? plainText(resultado.subtitulo) : undefined }));
 }

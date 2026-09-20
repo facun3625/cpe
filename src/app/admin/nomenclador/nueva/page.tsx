@@ -1,13 +1,5 @@
-import { NomencladorItemForm } from "@/components/admin/nomenclador-item-form";
-import { createNomencladorItem } from "../actions";
+import { redirect } from "next/navigation";
 
-export default function NuevaPrestacionPage() {
-  return (
-    <div>
-      <h1 className="text-2xl font-semibold text-gray-900">Nueva prestación</h1>
-      <div className="mt-6">
-        <NomencladorItemForm action={createNomencladorItem} submitLabel="Crear" />
-      </div>
-    </div>
-  );
+export default function Page() {
+  redirect("/admin/nomenclador");
 }

@@ -1,5 +1,7 @@
 "use client";
 
+import { plainText } from "@/lib/rich-text";
+
 import { useMemo, useState } from "react";
 import { AdminTable, RowActions } from "@/components/admin/fields";
 
@@ -23,7 +25,7 @@ const TIPO_LABELS: Record<Tipo, string> = {
 };
 
 function normalizar(texto: string) {
-  return texto.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  return plainText(texto).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 }
 
 function IconSearch() {
@@ -127,7 +129,7 @@ export function DocumentosBuscador({
       <AdminTable head={["Título", "Tipo", "Grupo", "Archivo"]} empty={resultados.length === 0 ? "No se encontraron documentos." : undefined}>
         {resultados.map((doc) => (
           <tr key={doc.id}>
-            <td className="px-4 py-3 font-medium text-gray-900">{doc.titulo}</td>
+            <td className="px-4 py-3 font-medium text-gray-900">{plainText(doc.titulo)}</td>
             <td className="px-4 py-3 text-gray-600">{TIPO_LABELS[doc.tipo]}</td>
             <td className="px-4 py-3 text-gray-600">{doc.grupo ?? "—"}</td>
             <td className="px-4 py-3">

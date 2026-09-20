@@ -1,5 +1,7 @@
 "use server";
 
+import { readRichText, richTextLines } from "@/lib/rich-text";
+
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -11,7 +13,7 @@ async function requireSession() {
 }
 
 function lineas(valor: FormDataEntryValue | null) {
-  return String(valor ?? "").split("\n").map((l) => l.trim()).filter(Boolean);
+  return richTextLines(valor);
 }
 
 function revalidateTodo() {
@@ -22,8 +24,8 @@ function revalidateTodo() {
 export async function createComision(formData: FormData) {
   await requireSession();
 
-  const titulo = String(formData.get("titulo") ?? "").trim();
-  const texto = String(formData.get("texto") ?? "").trim();
+  const titulo = readRichText(formData.get("titulo"));
+  const texto = readRichText(formData.get("texto"));
   const tramitesRelacionados = lineas(formData.get("tramitesRelacionados"));
   const orden = Number(formData.get("orden") ?? 0);
 
@@ -38,8 +40,8 @@ export async function createComision(formData: FormData) {
 export async function updateComision(id: string, formData: FormData) {
   await requireSession();
 
-  const titulo = String(formData.get("titulo") ?? "").trim();
-  const texto = String(formData.get("texto") ?? "").trim();
+  const titulo = readRichText(formData.get("titulo"));
+  const texto = readRichText(formData.get("texto"));
   const tramitesRelacionados = lineas(formData.get("tramitesRelacionados"));
   const orden = Number(formData.get("orden") ?? 0);
 
