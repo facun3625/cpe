@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
-import { saveUploadedFile } from "@/lib/upload";
+import { assertPdf, saveUploadedFile } from "@/lib/upload";
 
 async function requireSession() {
   const session = await auth();
@@ -32,6 +32,7 @@ export async function createPost(formData: FormData) {
   if (!categoriaId || !titulo || !bajada) throw new Error("Categoría, título y bajada son obligatorios");
 
   const portadaUrl = portada && portada.size > 0 ? await saveUploadedFile(portada, "biblioteca/portadas") : null;
+  if (archivo && archivo.size > 0) await assertPdf(archivo);
   const archivoUrl = archivo && archivo.size > 0 ? await saveUploadedFile(archivo, "biblioteca/archivos") : null;
 
   await prisma.bibliotecaPost.create({
@@ -68,7 +69,10 @@ export async function updatePost(id: string, formData: FormData) {
   if (portada && portada.size > 0) data.portadaUrl = await saveUploadedFile(portada, "biblioteca/portadas");
   else if (formData.get("portadaEliminar") === "1") data.portadaUrl = null;
 
-  if (archivo && archivo.size > 0) data.archivoUrl = await saveUploadedFile(archivo, "biblioteca/archivos");
+  if (archivo && archivo.size > 0) {
+    await assertPdf(archivo);
+    data.archivoUrl = await saveUploadedFile(archivo, "biblioteca/archivos");
+  }
 
   await prisma.bibliotecaPost.update({ where: { id }, data });
 

@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
-import { saveUploadedFile } from "@/lib/upload";
+import { assertPdf, saveUploadedFile } from "@/lib/upload";
 import type { DocumentoTipo } from "@prisma/client";
 
 async function requireSession() {
@@ -33,6 +33,7 @@ export async function createDocumento(formData: FormData) {
 
   if (!titulo || !tipo) throw new Error("Título y tipo son obligatorios");
 
+  if (archivo && archivo.size > 0) await assertPdf(archivo);
   const archivoUrl = archivo && archivo.size > 0 ? await saveUploadedFile(archivo, "documentos") : null;
 
   await prisma.documento.create({
@@ -61,6 +62,7 @@ export async function updateDocumento(id: string, formData: FormData) {
     noReconocida,
   };
   if (archivo && archivo.size > 0) {
+    await assertPdf(archivo);
     data.archivoUrl = await saveUploadedFile(archivo, "documentos");
   }
 
