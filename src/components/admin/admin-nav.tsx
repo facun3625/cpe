@@ -18,6 +18,7 @@ const NAVIGATION: [string, string][] = [
   ["Nomenclador", "/admin/nomenclador"],
   ["SEO", "/admin/seo"],
   ["Pop-up", "/admin/popup"],
+  ["Usuarios", "/admin/usuarios"],
 ];
 
 export function AdminNav() {

@@ -11,7 +11,7 @@ export function Field({ label, hint, children }: { label: string; hint?: string;
   );
 }
 
-const inputClass =
+export const inputClass =
   "w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-800 shadow-sm transition placeholder:text-slate-400 focus:border-cpe-royal focus:outline-none focus:ring-4 focus:ring-cpe-royal/10";
 
 export function TextInput({ rich = false, ...props }: React.InputHTMLAttributes<HTMLInputElement> & { rich?: boolean }) {
