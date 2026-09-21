@@ -41,8 +41,8 @@ export function DocumentoForm({
         <label htmlFor="noReconocida" className="text-sm text-gray-700">No corresponde a incumbencias de enfermería (solo dictámenes)</label>
       </div>
 
-      <Field label={defaultValues?.archivoUrl ? "Reemplazar archivo (PDF)" : "Archivo (PDF)"}>
-        <input type="file" name="archivo" accept="application/pdf" className="block w-full text-sm text-gray-600 file:mr-4 file:rounded-md file:border-0 file:bg-cpe-navy file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white" />
+      <Field label={defaultValues?.archivoUrl ? "Reemplazar archivo (PDF o imagen)" : "Archivo (PDF o imagen)"}>
+        <input type="file" name="archivo" accept="application/pdf,image/jpeg,image/png" className="block w-full text-sm text-gray-600 file:mr-4 file:rounded-md file:border-0 file:bg-cpe-navy file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white" />
         {defaultValues?.archivoUrl && (
           <p className="mt-2 text-xs text-slate-500">
             Archivo actual: <a href={defaultValues.archivoUrl} target="_blank" rel="noreferrer" className="font-semibold text-cpe-blue hover:underline">verlo ↗</a>

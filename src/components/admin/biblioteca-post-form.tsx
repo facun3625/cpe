@@ -52,8 +52,8 @@ export function BibliotecaPostForm({
         <ImagenPortadaInput name="portada" defaultUrl={defaultValues?.portadaUrl} />
       </Card>
 
-      <Card title="Bibliografía" hint="Opcional — el PDF que se podrá descargar desde la card">
-        <ArchivoUnicoInput name="archivo" accept="application/pdf" defaultUrl={defaultValues?.archivoUrl} defaultNombre={plainText(defaultValues?.titulo)} />
+      <Card title="Bibliografía" hint="Opcional — el PDF o imagen que se podrá descargar desde la card">
+        <ArchivoUnicoInput name="archivo" accept="application/pdf,image/jpeg,image/png" defaultUrl={defaultValues?.archivoUrl} defaultNombre={plainText(defaultValues?.titulo)} />
       </Card>
 
       <Card title="Publicación">
