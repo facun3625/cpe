@@ -15,6 +15,7 @@ const NAVIGATION: [string, string][] = [
   ["Formación", "/admin/formacion"],
   ["Biblioteca", "/admin/biblioteca"],
   ["Sedes", "/admin/sedes"],
+  ["Centro Educativo Recreativo", "/admin/centro-educativo-recreativo"],
   ["Nomenclador", "/admin/nomenclador"],
   ["SEO", "/admin/seo"],
   ["Pop-up", "/admin/popup"],

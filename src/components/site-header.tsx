@@ -28,6 +28,7 @@ const NAV_LINKS: NavLink[] = [
   { href: "/nomenclador", label: "Nomenclador" },
   { href: "/tramites", label: "Trámites" },
   { href: "/becas", label: "Becas" },
+  { href: "/centro-educativo-recreativo", label: "Centro Educativo Recreativo" },
   {
     href: "/actividad-academica",
     label: "Act. Académica",
@@ -72,9 +73,26 @@ export function SiteHeader({ novedadCategorias = [] }: { novedadCategorias?: str
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-cpe-royal/95 text-white backdrop-blur-xl">
       <div className="bg-cpe-navy text-white"><div className="mx-auto flex h-9 max-w-7xl items-center justify-between px-5 text-[11px] font-semibold tracking-wide sm:px-8"><Link href="/login" className="hidden text-white/65 transition hover:text-white sm:block">Acceso administradores</Link><div className="ml-auto flex items-center gap-3 sm:gap-5"><a href="mailto:colegioenfermeros@gmail.com" className="hidden text-white/70 transition hover:text-white md:block">colegioenfermeros@gmail.com</a><Link href="/contacto" className="hidden text-white/70 transition hover:text-white sm:block">Contacto</Link><a href="https://cpesag.com.ar" target="_blank" rel="noreferrer" className="whitespace-nowrap text-white transition hover:text-white/80">Ingresar al SAG ↗</a><SiteSearch compact /><SocialLinks className="border-l border-white/15 pl-3 text-white sm:pl-5" /></div></div></div>
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:h-24 sm:px-8 xl:h-[104px]">
-        <Link href="/" onClick={() => setOpen(false)} className="relative z-10 shrink-0"><Image src="/logo_final.png" alt="CPE Santa Fe" width={885} height={256} priority className="h-14 w-auto object-contain object-left sm:h-16 xl:h-[76px]" /></Link>
-        <nav ref={navRef} className="hidden items-center gap-1 xl:flex" aria-label="Navegación principal">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <div className="flex h-20 items-center justify-between sm:h-24 xl:h-28 xl:justify-center">
+          <Link href="/" onClick={() => setOpen(false)} className="relative z-10 shrink-0"><Image src="/logo_final.png" alt="CPE Santa Fe" width={885} height={256} priority className="h-14 w-auto object-contain object-left sm:h-16 xl:h-20" /></Link>
+          <div className="flex shrink-0 items-center gap-2 xl:hidden">
+            <button
+              type="button"
+              onClick={() => setOpen((prev) => { if (prev) setMobileOpen(null); return !prev; })}
+              className="grid h-11 w-11 cursor-pointer place-items-center rounded-full border border-white/20 bg-white/10 text-white transition-colors"
+              aria-label={open ? "Cerrar menú" : "Abrir menú"}
+              aria-expanded={open}
+            >
+              <span className="relative flex h-4 w-5 flex-col justify-between">
+                <span className={`h-0.5 w-full rounded-full bg-white transition-all duration-300 ease-in-out ${open ? "translate-y-[7px] rotate-45" : ""}`} />
+                <span className={`h-0.5 w-full rounded-full bg-white transition-all duration-200 ease-in-out ${open ? "scale-x-0 opacity-0" : "opacity-100"}`} />
+                <span className={`h-0.5 w-full rounded-full bg-white transition-all duration-300 ease-in-out ${open ? "-translate-y-[7px] -rotate-45" : ""}`} />
+              </span>
+            </button>
+          </div>
+        </div>
+        <nav ref={navRef} className="hidden items-center justify-center gap-1 border-t border-white/10 pb-3.5 pt-2.5 xl:flex" aria-label="Navegación principal">
           {navLinks.map((link) => {
             const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
             const isOpen = desktopOpen === link.href;
@@ -124,21 +142,6 @@ export function SiteHeader({ novedadCategorias = [] }: { novedadCategorias?: str
             );
           })}
         </nav>
-        <div className="flex shrink-0 items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setOpen((prev) => { if (prev) setMobileOpen(null); return !prev; })}
-            className="grid h-11 w-11 cursor-pointer place-items-center rounded-full border border-white/20 bg-white/10 text-white transition-colors xl:hidden"
-            aria-label={open ? "Cerrar menú" : "Abrir menú"}
-            aria-expanded={open}
-          >
-            <span className="relative flex h-4 w-5 flex-col justify-between">
-              <span className={`h-0.5 w-full rounded-full bg-white transition-all duration-300 ease-in-out ${open ? "translate-y-[7px] rotate-45" : ""}`} />
-              <span className={`h-0.5 w-full rounded-full bg-white transition-all duration-200 ease-in-out ${open ? "scale-x-0 opacity-0" : "opacity-100"}`} />
-              <span className={`h-0.5 w-full rounded-full bg-white transition-all duration-300 ease-in-out ${open ? "-translate-y-[7px] -rotate-45" : ""}`} />
-            </span>
-          </button>
-        </div>
       </div>
       <nav
         className={`absolute inset-x-0 top-full max-h-[calc(100vh-80px)] overflow-y-auto border-t border-white/10 bg-cpe-navy px-5 pb-6 pt-3 shadow-2xl transition-all duration-300 ease-out sm:max-h-[calc(100vh-96px)] xl:hidden ${open ? "visible translate-y-0 opacity-100" : "invisible -translate-y-2 opacity-0"}`}
