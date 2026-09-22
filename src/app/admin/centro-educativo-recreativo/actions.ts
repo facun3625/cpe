@@ -45,7 +45,8 @@ export async function guardarCer(formData: FormData) {
 
   const texto = readRichText(formData.get("texto"));
   const galeria = await resolverGaleria(formData);
-  const contenido = { texto, galeria };
+  const whatsapp = String(formData.get("whatsapp") ?? "").replace(/\D/g, "");
+  const contenido = { texto, galeria, whatsapp };
 
   await prisma.paginaTexto.upsert({
     where: { pagina: "centro-educativo-recreativo" },
