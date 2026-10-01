@@ -31,5 +31,5 @@ export async function guardarRedesSociales(formData: FormData) {
 
   revalidatePath("/", "layout");
   revalidatePath("/admin/redes-sociales");
-  redirect("/admin/redes-sociales");
+  redirect("/admin/redes-sociales?guardado=1");
 }
