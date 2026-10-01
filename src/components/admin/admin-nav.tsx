@@ -19,6 +19,7 @@ const NAVIGATION: [string, string][] = [
   ["Nomenclador", "/admin/nomenclador"],
   ["SEO", "/admin/seo"],
   ["Pop-up", "/admin/popup"],
+  ["Redes sociales", "/admin/redes-sociales"],
   ["Usuarios", "/admin/usuarios"],
 ];
 

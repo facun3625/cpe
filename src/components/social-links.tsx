@@ -1,9 +1,3 @@
-const SOCIALS = [
-  { name: "Instagram", href: "#" },
-  { name: "Facebook", href: "#" },
-  { name: "YouTube", href: "#" },
-] as const;
-
 function IconInstagram() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4">
@@ -31,26 +25,31 @@ function IconYoutube() {
   );
 }
 
-const ICONS = { Instagram: IconInstagram, Facebook: IconFacebook, YouTube: IconYoutube };
+export type RedesSociales = { instagram?: string | null; facebook?: string | null; youtube?: string | null };
 
-export function SocialLinks({ className = "" }: { className?: string }) {
+export function SocialLinks({ redes, className = "" }: { redes?: RedesSociales; className?: string }) {
+  const socials = [
+    { name: "Instagram", href: redes?.instagram, Icon: IconInstagram },
+    { name: "Facebook", href: redes?.facebook, Icon: IconFacebook },
+    { name: "YouTube", href: redes?.youtube, Icon: IconYoutube },
+  ].filter((s): s is { name: string; href: string; Icon: typeof IconInstagram } => !!s.href);
+
+  if (socials.length === 0) return null;
+
   return (
     <div className={`flex items-center gap-3 ${className}`}>
-      {SOCIALS.map((social) => {
-        const Icon = ICONS[social.name];
-        return (
-          <a
-            key={social.name}
-            href={social.href}
-            target="_blank"
-            rel="noreferrer"
-            aria-label={social.name}
-            className="cursor-pointer text-current opacity-70 transition hover:opacity-100"
-          >
-            <Icon />
-          </a>
-        );
-      })}
+      {socials.map(({ name, href, Icon }) => (
+        <a
+          key={name}
+          href={href}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={name}
+          className="cursor-pointer text-current opacity-70 transition hover:opacity-100"
+        >
+          <Icon />
+        </a>
+      ))}
     </div>
   );
 }
