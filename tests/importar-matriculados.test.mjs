@@ -7,7 +7,10 @@ import ts from 'typescript';
 const source = readFileSync(new URL('../src/app/admin/matriculados/actions.ts', import.meta.url), 'utf8');
 const code = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
 
+const HEADER_ROW = ['Apellido', 'Nombre', 'Dni', 'Matricula', 'Nivel'];
+
 function setup(rows, failOnDni) {
+  rows = [HEADER_ROW, ...rows];
   let records = new Map([['1', { dni: '1' }], ['2', { dni: '2' }]]);
   let transactions = 0;
   const prisma = {
@@ -50,10 +53,10 @@ function setup(rows, failOnDni) {
     transactions: () => transactions,
   };
 }
-const valid = (dni) => ({ apellido: 'Apellido', nombre: 'Nombre', dni, matricula: '123', nivel: 'Licenciado' });
+const valid = (dni) => ['Apellido', 'Nombre', dni, '123', 'Licenciado'];
 
 test('reemplazar con una fila incompleta no escribe ni elimina registros', async () => {
-  const app = setup([valid('1'), { dni: '2', apellido: 'Incompleto' }]);
+  const app = setup([valid('1'), ['Incompleto', '', '2', '', '']]);
   const result = await app.run();
   assert.equal(app.transactions(), 0);
   assert.equal(app.records().size, 2);
@@ -74,7 +77,7 @@ test('reemplazo válido actualiza, crea y elimina los ausentes', async () => {
   assert.deepEqual([...app.records().keys()], ['1', '3']);
 });
 test('agregar omite filas inválidas sin borrar registros existentes', async () => {
-  const app = setup([valid('3'), { dni: '2' }]);
+  const app = setup([valid('3'), ['', '', '2', '', '']]);
   const result = await app.run('agregar');
   assert.equal(result.omitidos, 1);
   assert.equal(result.eliminados, 0);

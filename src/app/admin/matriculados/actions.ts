@@ -13,7 +13,7 @@ async function requireSession() {
 }
 
 function normalizarClave(clave: string) {
-  return clave.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
+  return clave.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "").trim();
 }
 
 function detectarNivel(valor: string): NivelMatricula {
@@ -99,7 +99,9 @@ export async function importarMatriculadosExcel(formData: FormData): Promise<Imp
   if (!hoja) {
     return { creados: 0, actualizados: 0, omitidos: 0, eliminados: 0, errores: ["El archivo no tiene ninguna hoja con datos."] };
   }
-  const filas = XLSX.utils.sheet_to_json<Record<string, unknown>>(hoja, { defval: "" });
+  // Se lee por posición de columna (A: Apellido, B: Nombre, C: DNI, D: Matrícula, E: Nivel),
+  // sin depender de cómo esté escrito el encabezado en la fila 1 (varía entre exportaciones).
+  const filas = XLSX.utils.sheet_to_json<unknown[]>(hoja, { header: 1, defval: "" }).slice(1);
 
   let creados = 0;
   let actualizados = 0;
@@ -109,15 +111,14 @@ export async function importarMatriculadosExcel(formData: FormData): Promise<Imp
 
   const validos: { apellido: string; nombre: string; dni: string; matricula: string; nivel: NivelMatricula }[] = [];
 
-  for (const [index, filaCruda] of filas.entries()) {
-    const fila: Record<string, unknown> = {};
-    for (const [clave, valor] of Object.entries(filaCruda)) fila[normalizarClave(clave)] = valor;
+  for (const [index, fila] of filas.entries()) {
+    if (fila.every((v) => String(v ?? "").trim() === "")) continue;
 
-    const apellido = String(fila["apellido"] ?? "").trim();
-    const nombre = String(fila["nombre"] ?? "").trim();
-    const dni = String(fila["dni"] ?? "").trim();
-    const matricula = String(fila["matricula"] ?? fila["matrícula"] ?? "").trim();
-    const nivelTexto = String(fila["nivel"] ?? "").trim();
+    const apellido = String(fila[0] ?? "").trim();
+    const nombre = String(fila[1] ?? "").trim();
+    const dni = String(fila[2] ?? "").trim();
+    const matricula = String(fila[3] ?? "").trim();
+    const nivelTexto = String(fila[4] ?? "").trim();
 
     if (!apellido || !nombre || !dni || !matricula) {
       omitidos++;
