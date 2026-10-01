@@ -62,10 +62,10 @@ export function BuscadorMatriculados({ matriculados, initialQuery }: { matricula
       const soloDigitos = q.replace(/\D/g, "");
 
       lista = matriculados.filter((m) => {
-        const nombreCompleto = normalizar(`${m.apellido} ${m.nombre}`);
-        const coincideNombre = tokens.every((t) => nombreCompleto.includes(t));
-        const coincideDni = soloDigitos.length > 0 && m.dni.replace(/\./g, "").includes(soloDigitos);
-        const coincideMatricula = normalizar(m.matricula).includes(q);
+        const palabras = normalizar(`${m.apellido} ${m.nombre}`).split(/\s+/).filter(Boolean);
+        const coincideNombre = tokens.every((t) => palabras.some((p) => p.startsWith(t)));
+        const coincideDni = soloDigitos.length > 0 && m.dni.replace(/\./g, "").startsWith(soloDigitos);
+        const coincideMatricula = normalizar(m.matricula).startsWith(q) || (soloDigitos.length > 0 && m.matricula.replace(/\D/g, "").startsWith(soloDigitos));
         return coincideNombre || coincideDni || coincideMatricula;
       });
     }
