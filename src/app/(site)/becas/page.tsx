@@ -83,21 +83,6 @@ export default async function Page() {
             ))}
           </ul>
         )}
-
-        <div className="mt-8 flex flex-col items-start justify-between gap-4 rounded-2xl bg-cpe-bg px-6 py-5 sm:flex-row sm:items-center">
-          <div>
-            <p className="font-semibold text-cpe-navy">¿Ya cumplís los requisitos?</p>
-            <p className="mt-1 text-sm text-slate-500">Iniciá tu solicitud desde el Sistema de Autogestión (SAG).</p>
-          </div>
-          <a
-            href="https://cpesag.com.ar"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full bg-cpe-navy px-5 py-2.5 text-xs font-bold text-white transition hover:bg-cpe-royal"
-          >
-            Iniciar en el SAG ↗
-          </a>
-        </div>
       </div>
     </InternalPage>
   );
