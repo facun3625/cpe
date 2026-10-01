@@ -8,17 +8,19 @@ export const AMBITOS = [
 ] as const;
 export type ValoresUpe = Record<(typeof AMBITOS)[number]["key"], number>;
 export type Referencia = { concepto: string; valor: number };
+export type MostrarDescarga = "ambos" | "excel" | "pdf";
 export type NomencladorConfig = {
   valoresUpe: ValoresUpe;
   otrosValores: Referencia[];
   pdfUrl: string | null;
   archivoNombre: string | null;
   publicadoEn: string | null;
+  mostrarDescarga: MostrarDescarga;
 };
 export const DEFAULT_CONFIG: NomencladorConfig = {
   valoresUpe: { cd: VALORES_UPE[0].valor, cn: VALORES_UPE[1].valor, dd: VALORES_UPE[2].valor, dn: VALORES_UPE[3].valor },
   otrosValores: OTROS_VALORES,
-  pdfUrl: null, archivoNombre: null, publicadoEn: null,
+  pdfUrl: null, archivoNombre: null, publicadoEn: null, mostrarDescarga: "ambos",
 };
 export function readNomencladorConfig(value: unknown): NomencladorConfig {
   if (!value || typeof value !== "object" || Array.isArray(value)) return { ...DEFAULT_CONFIG };
@@ -34,5 +36,6 @@ export function readNomencladorConfig(value: unknown): NomencladorConfig {
     pdfUrl: typeof data.pdfUrl === "string" && data.pdfUrl.startsWith("/uploads/nomenclador/") ? data.pdfUrl : null,
     archivoNombre: typeof data.archivoNombre === "string" ? data.archivoNombre : null,
     publicadoEn: typeof data.publicadoEn === "string" ? data.publicadoEn : null,
+    mostrarDescarga: data.mostrarDescarga === "excel" || data.mostrarDescarga === "pdf" ? data.mostrarDescarga : "ambos",
   };
 }

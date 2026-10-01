@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { saveUploadedFile } from "@/lib/upload";
-import { AMBITOS, readNomencladorConfig } from "@/lib/nomenclador/config";
+import { AMBITOS, readNomencladorConfig, type MostrarDescarga } from "@/lib/nomenclador/config";
 import { parseImporte, parsePlanilla, type PrestacionImportada } from "@/lib/nomenclador/planilla";
 import type { ValoresUpe } from "@/lib/nomenclador/config";
 
@@ -102,6 +102,22 @@ export async function guardarValoresUpe(formData: FormData): Promise<EstadoNomen
     revalidateTodo();
     return { ok: true, mensaje: "Se guardaron los cuatro valores por UPE." };
   } catch { return { ok: false, mensaje: "No se pudieron guardar los valores. Intentá nuevamente." }; }
+}
+
+export async function guardarMostrarDescarga(formData: FormData): Promise<EstadoNomenclador> {
+  await requireSession();
+  const valor = String(formData.get("mostrarDescarga") ?? "");
+  if (valor !== "ambos" && valor !== "excel" && valor !== "pdf") return { ok: false, mensaje: "Opción inválida." };
+  const mostrarDescarga = valor as MostrarDescarga;
+  try {
+    await prisma.$transaction(async (tx) => {
+      const registro = await tx.paginaTexto.findUnique({ where: { pagina: "nomenclador" } });
+      const contenido = { ...readNomencladorConfig(registro?.contenido), mostrarDescarga };
+      await tx.paginaTexto.upsert({ where: { pagina: "nomenclador" }, create: { pagina: "nomenclador", contenido }, update: { contenido } });
+    });
+    revalidateTodo();
+    return { ok: true, mensaje: "Se guardó qué botón de descarga se muestra." };
+  } catch { return { ok: false, mensaje: "No se pudo guardar la preferencia. Intentá nuevamente." }; }
 }
 
 export async function guardarPdfNomenclador(formData: FormData): Promise<EstadoNomenclador> {

@@ -36,8 +36,8 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ q
       </div>
 
       <div className="mt-6 flex flex-wrap items-center gap-3">
-        <a href="/api/nomenclador/excel" download className="inline-flex rounded-full bg-cpe-navy px-5 py-3 text-sm font-bold text-white hover:bg-cpe-royal">Descargar Excel ↓</a>
-        {config.pdfUrl && <a href={config.pdfUrl} download className="inline-flex rounded-full border border-cpe-navy px-5 py-3 text-sm font-bold text-cpe-navy hover:bg-white">Descargar PDF ↓</a>}
+        {config.mostrarDescarga !== "pdf" && <a href="/api/nomenclador/excel" download className="inline-flex rounded-full bg-cpe-navy px-5 py-3 text-sm font-bold text-white hover:bg-cpe-royal">Descargar Excel ↓</a>}
+        {config.mostrarDescarga !== "excel" && config.pdfUrl && <a href={config.pdfUrl} download className="inline-flex rounded-full border border-cpe-navy px-5 py-3 text-sm font-bold text-cpe-navy hover:bg-white">Descargar PDF ↓</a>}
         {config.publicadoEn && <p className="text-xs text-slate-500">Publicación actualizada el {new Intl.DateTimeFormat("es-AR", { dateStyle: "medium", timeZone: "America/Argentina/Cordoba" }).format(new Date(config.publicadoEn))}</p>}
       </div>
 

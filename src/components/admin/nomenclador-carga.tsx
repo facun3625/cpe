@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { AMBITOS, type NomencladorConfig } from "@/lib/nomenclador/config";
 import { formatearMoneda } from "@/components/nomenclador/data";
-import { guardarPdfNomenclador, guardarValoresUpe, publicarPlanilla, revisarPlanilla, type EstadoNomenclador, type RevisionNomenclador } from "@/app/admin/nomenclador/actions";
+import { guardarMostrarDescarga, guardarPdfNomenclador, guardarValoresUpe, publicarPlanilla, revisarPlanilla, type EstadoNomenclador, type RevisionNomenclador } from "@/app/admin/nomenclador/actions";
 
 const inputClass = "mt-2 w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-800";
 const buttonClass = "rounded-full bg-cpe-navy px-5 py-2.5 text-sm font-bold text-white disabled:cursor-wait disabled:opacity-50";
@@ -22,6 +22,7 @@ export function NomencladorCarga({ config }: { config: NomencladorConfig }) {
   const [importResult, setImportResult] = useState<EstadoNomenclador | null>(null);
   const [upeResult, setUpeResult] = useState<EstadoNomenclador | null>(null);
   const [pdfResult, setPdfResult] = useState<EstadoNomenclador | null>(null);
+  const [descargaResult, setDescargaResult] = useState<EstadoNomenclador | null>(null);
 
   function run(task: () => Promise<void>, report: (result: EstadoNomenclador) => void) {
     startTransition(async () => {
@@ -104,6 +105,30 @@ export function NomencladorCarga({ config }: { config: NomencladorConfig }) {
         <input aria-label="PDF del nomenclador" type="file" name="pdf" accept=".pdf,application/pdf" required disabled={pending} className={fileClass} />
         <button className={buttonClass} disabled={pending}>{config.pdfUrl ? "Reemplazar PDF" : "Publicar PDF"}</button>
         <Mensaje result={pdfResult} />
+      </form>
+    </section>
+
+    <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+      <h2 className="text-lg font-bold text-cpe-navy">Botones de descarga</h2>
+      <p className="mt-1 text-sm text-slate-500">Elegí qué botón de descarga se muestra en la página pública del nomenclador.</p>
+      <form className="mt-4 space-y-4" onSubmit={(event) => {
+        event.preventDefault(); const data = new FormData(event.currentTarget);
+        run(async () => { const result = await guardarMostrarDescarga(data); setDescargaResult(result); if (result.ok) router.refresh(); }, setDescargaResult);
+      }}>
+        <div className="space-y-2">
+          {[
+            { value: "ambos", label: "Mostrar Excel y PDF" },
+            { value: "excel", label: "Mostrar solo Excel" },
+            { value: "pdf", label: "Mostrar solo PDF" },
+          ].map(({ value, label }) => (
+            <label key={value} className="flex cursor-pointer items-center gap-2 text-sm text-slate-700">
+              <input type="radio" name="mostrarDescarga" value={value} defaultChecked={config.mostrarDescarga === value} disabled={pending} className="cursor-pointer" />
+              {label}
+            </label>
+          ))}
+        </div>
+        <button className={buttonClass} disabled={pending}>Guardar</button>
+        <Mensaje result={descargaResult} />
       </form>
     </section>
   </div>;
