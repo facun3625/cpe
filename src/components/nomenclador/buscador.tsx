@@ -14,6 +14,7 @@ type ItemNomenclador = {
   id: string;
   nombre: string;
   tiempo: string;
+  upe: number;
   cd: number;
   cn: number;
   dd?: number | null;
@@ -35,8 +36,7 @@ function IconSearch() {
 }
 
 export function BuscadorNomenclador({ items, initialQuery }: { items: ItemNomenclador[]; initialQuery?: string }) {
-  const separarDomicilio = items.some((item) => (item.dd ?? item.cn) !== item.cn);
-  const columnas = separarDomicilio ? "sm:grid-cols-[1fr_65px_95px_95px_95px_95px]" : "sm:grid-cols-[1fr_70px_110px_140px_110px]";
+  const columnas = "sm:grid-cols-[1fr_55px_55px_90px_90px_90px_90px]";
   const [query, setQuery] = useState(initialQuery ?? "");
   const [pagina, setPagina] = useState(1);
 
@@ -76,9 +76,10 @@ export function BuscadorNomenclador({ items, initialQuery }: { items: ItemNomenc
         <div className={`hidden ${columnas} gap-2 border-b border-slate-200 bg-cpe-bg px-6 py-3 text-[11px] font-bold uppercase tracking-wide text-slate-500 sm:grid`}>
           <span>Prestación</span>
           <span className="text-right">Tiempo</span>
+          <span className="text-right">Cant.</span>
           <span className="text-right">Consultorio D.</span>
-          <span className="text-right">{separarDomicilio ? "Consultorio N." : "Cons. N. / Dom. D."}</span>
-          {separarDomicilio && <span className="text-right">Domicilio D.</span>}
+          <span className="text-right">Consultorio N.</span>
+          <span className="text-right">Domicilio D.</span>
           <span className="text-right">Domicilio N.</span>
         </div>
         <div className="divide-y divide-slate-200">
@@ -98,9 +99,10 @@ export function BuscadorNomenclador({ items, initialQuery }: { items: ItemNomenc
                   )}
                 </div>
                 <span className="text-xs text-slate-500 sm:text-right"><span className="sm:hidden">Tiempo: </span>{a.tiempo}</span>
+                <span className="text-xs text-slate-500 sm:text-right"><span className="sm:hidden">Cant.: </span>{a.upe}</span>
                 <span className="text-sm font-medium text-cpe-navy sm:text-right"><span className="sm:hidden">Consultorio diurno: </span>{formatearMoneda(a.cd)}</span>
-                <span className="text-sm font-medium text-cpe-navy sm:text-right"><span className="sm:hidden">{separarDomicilio ? "Consultorio nocturno: " : "Consultorio nocturno / Domicilio diurno: "}</span>{formatearMoneda(a.cn)}</span>
-                {separarDomicilio && <span className="text-sm font-medium text-cpe-navy sm:text-right"><span className="sm:hidden">Domicilio diurno: </span>{formatearMoneda(a.dd ?? a.cn)}</span>}
+                <span className="text-sm font-medium text-cpe-navy sm:text-right"><span className="sm:hidden">Consultorio nocturno: </span>{formatearMoneda(a.cn)}</span>
+                <span className="text-sm font-medium text-cpe-navy sm:text-right"><span className="sm:hidden">Domicilio diurno: </span>{formatearMoneda(a.dd ?? a.cn)}</span>
                 <span className="text-sm font-medium text-cpe-navy sm:text-right"><span className="sm:hidden">Domicilio nocturno: </span>{formatearMoneda(a.dn)}</span>
               </div>
             ))
