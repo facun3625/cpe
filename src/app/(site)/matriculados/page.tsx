@@ -1,8 +1,11 @@
 import { InternalPage } from "@/components/internal-page";
 import { BuscadorMatriculados } from "@/components/matriculados/buscador";
 import { prisma } from "@/lib/prisma";
+import { getHero, HEROES } from "@/lib/page-hero";
 
 export const dynamic = "force-dynamic";
+
+const DEFAULTS = HEROES.find((h) => h.key === "matriculados")!.defaults;
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   const { q } = await searchParams;
@@ -10,12 +13,13 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ q
   try {
     matriculados = await prisma.matriculado.findMany({ orderBy: [{ apellido: "asc" }, { nombre: "asc" }] });
   } catch {}
+  const hero = await getHero("matriculados", DEFAULTS);
 
   return (
     <InternalPage
-      eyebrow="Matrícula profesional"
-      title="Matriculados activos."
-      intro="Consultá el padrón de profesionales matriculados en el Colegio: enfermeros, licenciados y auxiliares de enfermería de toda la provincia."
+      eyebrow={hero.eyebrow}
+      title={hero.titulo}
+      intro={hero.intro}
     >
       <BuscadorMatriculados matriculados={matriculados} initialQuery={q} />
       <p className="mt-8 text-sm text-slate-600">

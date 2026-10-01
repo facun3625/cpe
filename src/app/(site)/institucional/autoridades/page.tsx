@@ -2,6 +2,7 @@ import { RichText } from "@/components/rich-text";
 import { FotoPublica } from "@/components/foto-publica";
 import { InternalPage } from "@/components/internal-page";
 import { prisma } from "@/lib/prisma";
+import { getHero, HEROES } from "@/lib/page-hero";
 
 const AVATAR_COLORS = ["bg-cpe-navy", "bg-cpe-royal", "bg-cpe-coral", "bg-cpe-navy-light"];
 
@@ -33,11 +34,14 @@ function Lista({ titulo, nombres }: { titulo: string; nombres: string[] }) {
 
 export const dynamic = "force-dynamic";
 
+const DEFAULTS = HEROES.find((h) => h.key === "institucional-autoridades")!.defaults;
+
 export default async function Page() {
   let autoridades: Awaited<ReturnType<typeof prisma.autoridad.findMany>> = [];
   try {
     autoridades = await prisma.autoridad.findMany({ orderBy: [{ grupo: "asc" }, { orden: "asc" }] });
   } catch {}
+  const hero = await getHero("institucional-autoridades", DEFAULTS);
 
   const consejoDirectivo = autoridades.filter((a) => a.grupo === "CONSEJO_DIRECTIVO");
   const vocalesTitulares = autoridades.filter((a) => a.grupo === "VOCAL_TITULAR").map((a) => a.nombre);
@@ -48,9 +52,9 @@ export default async function Page() {
 
   return (
     <InternalPage
-      eyebrow="Institucional"
-      title="Autoridades."
-      intro="Quienes integran el Consejo Directivo y los órganos institucionales del Colegio."
+      eyebrow={hero.eyebrow}
+      title={hero.titulo}
+      intro={hero.intro}
     >
       <p className="text-xs font-bold uppercase tracking-[.22em] text-cpe-coral">Consejo directivo</p>
       <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">

@@ -181,23 +181,3 @@ export async function toggleDestacadaHome(id: string, destacadaHome: boolean) {
   revalidatePath("/");
   revalidatePath("/admin/novedades");
 }
-
-export async function guardarTextosNovedades(formData: FormData) {
-  await requireSession();
-
-  const contenido = {
-    eyebrow: readRichText(formData.get("eyebrow")),
-    titulo: readRichText(formData.get("titulo")),
-    intro: readRichText(formData.get("intro")),
-  };
-
-  await prisma.paginaTexto.upsert({
-    where: { pagina: "novedades" },
-    update: { contenido },
-    create: { pagina: "novedades", contenido },
-  });
-
-  revalidatePath("/novedades");
-  revalidatePath("/admin/novedades");
-  redirect("/admin/novedades?guardado=1");
-}

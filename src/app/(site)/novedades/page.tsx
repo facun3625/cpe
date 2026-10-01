@@ -2,23 +2,23 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { InternalPage } from "@/components/internal-page";
 import { NovedadCard } from "@/components/novedad-card";
+import { getHero, HEROES } from "@/lib/page-hero";
 
 export const dynamic = "force-dynamic";
 
-type TextosNovedades = { eyebrow?: string; titulo?: string; intro?: string };
+const DEFAULTS = HEROES.find((h) => h.key === "novedades")!.defaults;
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ categoria?: string }> }){
   const { categoria } = await searchParams;
   let novedades: Awaited<ReturnType<typeof prisma.novedad.findMany>>=[];
   let CATEGORIAS: string[] = [];
-  let textos: TextosNovedades = {};
   try { novedades=await prisma.novedad.findMany({where:{publicada:true, ...(categoria?{categoria}:{})},orderBy:{publicadoEn:"desc"}}); } catch {}
   try { CATEGORIAS=(await prisma.novedadCategoria.findMany({orderBy:{orden:"asc"}})).map((c)=>c.nombre); } catch {}
-  try { const registro = await prisma.paginaTexto.findUnique({ where: { pagina: "novedades" } }); if (registro) textos = registro.contenido as TextosNovedades; } catch {}
+  const hero = await getHero("novedades", DEFAULTS);
   return <InternalPage
-    eyebrow={textos.eyebrow || "Novedades"}
-    title={textos.titulo || "Lo que pasa en nuestra comunidad."}
-    intro={textos.intro || "Artículos de interés y novedades de la Sede Santa Fe y las delegaciones de Rafaela y Reconquista."}
+    eyebrow={hero.eyebrow}
+    title={hero.titulo}
+    intro={hero.intro}
   >
     <div className="mb-8 flex flex-wrap gap-2">
       <Link href="/novedades" className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wide transition ${!categoria ? "bg-cpe-navy text-white" : "bg-white text-cpe-navy border border-slate-200"}`}>Todas</Link>

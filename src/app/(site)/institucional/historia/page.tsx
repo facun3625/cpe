@@ -2,20 +2,24 @@ import { RichText } from "@/components/rich-text";
 import Image from "next/image";
 import { InternalPage } from "@/components/internal-page";
 import { prisma } from "@/lib/prisma";
+import { getHero, HEROES } from "@/lib/page-hero";
 
 export const dynamic = "force-dynamic";
+
+const DEFAULTS = HEROES.find((h) => h.key === "institucional-historia")!.defaults;
 
 export default async function Page() {
   let hitos: Awaited<ReturnType<typeof prisma.hitoHistoria.findMany>> = [];
   try {
     hitos = await prisma.hitoHistoria.findMany({ orderBy: { orden: "asc" } });
   } catch {}
+  const hero = await getHero("institucional-historia", DEFAULTS);
 
   return (
     <InternalPage
-      eyebrow="Institucional"
-      title="Nuestra historia."
-      intro="Los hitos que dieron forma a la organización profesional de la enfermería santafesina."
+      eyebrow={hero.eyebrow}
+      title={hero.titulo}
+      intro={hero.intro}
     >
       <div className="grid gap-8 lg:grid-cols-[280px_1fr] lg:items-start lg:gap-10">
         <div className="mx-auto w-full max-w-[280px] overflow-hidden rounded-3xl border border-slate-200 shadow-sm lg:sticky lg:top-32">

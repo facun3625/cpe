@@ -1,10 +1,13 @@
 import { RichText } from "@/components/rich-text";
 import { InternalPage } from "@/components/internal-page";
 import { prisma } from "@/lib/prisma";
+import { getHero, HEROES } from "@/lib/page-hero";
 
 type PropuestaContenido = { intro: string; parrafos: string[]; firma: string };
 
 export const dynamic = "force-dynamic";
+
+const DEFAULTS = HEROES.find((h) => h.key === "propuesta-educativa")!.defaults;
 
 export default async function Page() {
   let contenido: PropuestaContenido | null = null;
@@ -12,12 +15,13 @@ export default async function Page() {
     const registro = await prisma.paginaTexto.findUnique({ where: { pagina: "propuesta-educativa" } });
     contenido = (registro?.contenido as PropuestaContenido) ?? null;
   } catch {}
+  const hero = await getHero("propuesta-educativa", DEFAULTS);
 
   return (
     <InternalPage
-      eyebrow="Actividad académica"
-      title="Propuesta educativa."
-      intro={contenido?.intro ?? ""}
+      eyebrow={hero.eyebrow}
+      title={hero.titulo}
+      intro={contenido?.intro || hero.intro}
     >
       <div className="rounded-3xl bg-cpe-navy p-8 text-white sm:p-10">
         <p className="text-xs font-bold uppercase tracking-[.22em] text-cpe-mint">Comisión de Capacitación y Actividades Académicas</p>

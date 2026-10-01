@@ -1,6 +1,7 @@
 import { RichText } from "@/components/rich-text";
 import { InternalPage } from "@/components/internal-page";
 import { prisma } from "@/lib/prisma";
+import { getHero, HEROES } from "@/lib/page-hero";
 
 function IconDoc() {
   return (
@@ -21,17 +22,20 @@ function IconDownload() {
 
 export const dynamic = "force-dynamic";
 
+const DEFAULTS = HEROES.find((h) => h.key === "dictamenes")!.defaults;
+
 export default async function Page() {
   let dictamenes: Awaited<ReturnType<typeof prisma.documento.findMany>> = [];
   try {
     dictamenes = await prisma.documento.findMany({ where: { tipo: "DICTAMEN" }, orderBy: { orden: "asc" } });
   } catch {}
+  const hero = await getHero("dictamenes", DEFAULTS);
 
   return (
     <InternalPage
-      eyebrow="Documentación"
-      title="Dictámenes."
-      intro="Dictámenes de la Comisión de Incumbencias Profesionales de la Enfermería sobre alcances y límites del ejercicio."
+      eyebrow={hero.eyebrow}
+      title={hero.titulo}
+      intro={hero.intro}
     >
       <div className="divide-y divide-slate-200 overflow-hidden rounded-3xl border border-slate-200 bg-white">
         {dictamenes.map((dictamen) => (

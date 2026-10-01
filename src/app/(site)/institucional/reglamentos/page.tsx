@@ -2,6 +2,7 @@ import { RichText } from "@/components/rich-text";
 import { Accordion } from "@/components/accordion";
 import { InternalPage } from "@/components/internal-page";
 import { prisma } from "@/lib/prisma";
+import { getHero, HEROES } from "@/lib/page-hero";
 
 function IconDoc() {
   return (
@@ -22,6 +23,8 @@ function IconDownload() {
 
 export const dynamic = "force-dynamic";
 
+const DEFAULTS = HEROES.find((h) => h.key === "institucional-reglamentos")!.defaults;
+
 export default async function Page() {
   let documentos: Awaited<ReturnType<typeof prisma.documento.findMany>> = [];
   try {
@@ -29,12 +32,13 @@ export default async function Page() {
   } catch {}
 
   const grupos = Array.from(new Set(documentos.map((d) => d.grupo ?? "Documentos")));
+  const hero = await getHero("institucional-reglamentos", DEFAULTS);
 
   return (
     <InternalPage
-      eyebrow="Institucional"
-      title="Reglamentos."
-      intro="Normativa institucional, código de ética, resoluciones y documentación de consulta."
+      eyebrow={hero.eyebrow}
+      title={hero.titulo}
+      intro={hero.intro}
     >
       <Accordion
         items={grupos.map((grupo) => ({

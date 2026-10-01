@@ -3,8 +3,11 @@ import { InternalPage } from "@/components/internal-page";
 import { BuscadorNomenclador } from "@/components/nomenclador/buscador";
 import { formatearMoneda } from "@/components/nomenclador/data";
 import { prisma } from "@/lib/prisma";
+import { getHero, HEROES } from "@/lib/page-hero";
 
 export const dynamic = "force-dynamic";
+
+const DEFAULTS = HEROES.find((h) => h.key === "nomenclador")!.defaults;
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   const { q } = await searchParams;
@@ -18,12 +21,13 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ q
     items = prestaciones;
     config = readNomencladorConfig(registro?.contenido);
   } catch {}
+  const hero = await getHero("nomenclador", DEFAULTS);
 
   return (
     <InternalPage
-      eyebrow="Aranceles"
-      title="Nomenclador de prestaciones."
-      intro="Aranceles mínimos sugeridos para las prestaciones de enfermería. Consultá los precios publicados y descargá el nomenclador completo."
+      eyebrow={hero.eyebrow}
+      title={hero.titulo}
+      intro={hero.intro}
     >
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {AMBITOS.map((v) => (

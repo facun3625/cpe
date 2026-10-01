@@ -2,6 +2,7 @@ import { RichText } from "@/components/rich-text";
 import { Accordion } from "@/components/accordion";
 import { InternalPage } from "@/components/internal-page";
 import { prisma } from "@/lib/prisma";
+import { getHero, HEROES } from "@/lib/page-hero";
 
 function IconDownload() {
   return (
@@ -13,6 +14,8 @@ function IconDownload() {
 
 export const dynamic = "force-dynamic";
 
+const DEFAULTS = HEROES.find((h) => h.key === "tramites")!.defaults;
+
 export default async function Page() {
   let tramites: Awaited<ReturnType<typeof prisma.tramite.findMany>> = [];
   let notasModelo: Awaited<ReturnType<typeof prisma.documento.findMany>> = [];
@@ -22,12 +25,13 @@ export default async function Page() {
       prisma.documento.findMany({ where: { tipo: "NOTA_MODELO" } }),
     ]);
   } catch {}
+  const hero = await getHero("tramites", DEFAULTS);
 
   return (
     <InternalPage
-      eyebrow="Trámites"
-      title="Resolver tus gestiones tiene que ser simple."
-      intro="Requisitos para las principales gestiones vinculadas con tu matrícula profesional. Todos los trámites se inician a través del SAG (Sistema de Autogestión)."
+      eyebrow={hero.eyebrow}
+      title={hero.titulo}
+      intro={hero.intro}
       aside="Antes de iniciar una gestión, verificá que tengas las cuotas de mantenimiento al día y la documentación digitalizada con claridad."
     >
       <Accordion

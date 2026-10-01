@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 
 const NAVIGATION: [string, string][] = [
   ["Resumen", "/admin"],
+  ["Encabezados", "/admin/encabezados"],
   ["Novedades", "/admin/novedades"],
   ["Documentos", "/admin/documentos"],
   ["Matriculados", "/admin/matriculados"],

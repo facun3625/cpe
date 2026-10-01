@@ -1,6 +1,7 @@
 import { RichText } from "@/components/rich-text";
 import { InternalPage } from "@/components/internal-page";
 import { prisma } from "@/lib/prisma";
+import { getHero, HEROES } from "@/lib/page-hero";
 
 function IconDoc() {
   return (
@@ -23,6 +24,8 @@ type BecasContenido = { requisitos: string[] };
 
 export const dynamic = "force-dynamic";
 
+const DEFAULTS = HEROES.find((h) => h.key === "becas")!.defaults;
+
 export default async function Page() {
   let requisitos: string[] = [];
   let documentos: Awaited<ReturnType<typeof prisma.documento.findMany>> = [];
@@ -34,12 +37,13 @@ export default async function Page() {
     requisitos = (pagina?.contenido as BecasContenido | undefined)?.requisitos ?? [];
     documentos = docs;
   } catch {}
+  const hero = await getHero("becas", DEFAULTS);
 
   return (
     <InternalPage
-      eyebrow="Becas"
-      title="Más oportunidades para seguir creciendo."
-      intro="Apoyo económico para que los matriculados puedan participar en cursos, jornadas y eventos de formación profesional."
+      eyebrow={hero.eyebrow}
+      title={hero.titulo}
+      intro={hero.intro}
     >
       <div className="rounded-3xl border border-slate-200 bg-white p-7 sm:p-8">
         <p className="text-xs font-bold uppercase tracking-[.18em] text-cpe-coral">Requisitos para solicitar una beca</p>

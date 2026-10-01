@@ -1,6 +1,7 @@
 import { RichText } from "@/components/rich-text";
 import { InternalPage } from "@/components/internal-page";
 import { prisma } from "@/lib/prisma";
+import { getHero, HEROES } from "@/lib/page-hero";
 
 type MisionContenido = {
   misionTitulo: string;
@@ -20,15 +21,18 @@ const DEFAULT: MisionContenido = {
 
 export const dynamic = "force-dynamic";
 
+const HERO_DEFAULTS = HEROES.find((h) => h.key === "institucional-mision")!.defaults;
+
 export default async function Page() {
   const registro = await prisma.paginaTexto.findUnique({ where: { pagina: "mision" } }).catch(() => null);
   const contenido = (registro?.contenido as MisionContenido | undefined) ?? DEFAULT;
+  const hero = await getHero("institucional-mision", HERO_DEFAULTS);
 
   return (
     <InternalPage
-      eyebrow="Institucional"
-      title="Misión y visión."
-      intro="Los principios que guían al Colegio en la representación, el acompañamiento y el desarrollo de la enfermería santafesina."
+      eyebrow={hero.eyebrow}
+      title={hero.titulo}
+      intro={hero.intro}
     >
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="rounded-3xl bg-cpe-navy p-8 text-white sm:p-10">

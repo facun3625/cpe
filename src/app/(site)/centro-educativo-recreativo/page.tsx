@@ -2,10 +2,13 @@ import { InternalPage } from "@/components/internal-page";
 import { RichText } from "@/components/rich-text";
 import { NovedadGaleria } from "@/components/novedad-galeria";
 import { prisma } from "@/lib/prisma";
+import { getHero, HEROES } from "@/lib/page-hero";
 
 type CerContenido = { texto: string; galeria: string[]; whatsapp?: string };
 
 export const dynamic = "force-dynamic";
+
+const DEFAULTS = HEROES.find((h) => h.key === "centro-educativo-recreativo")!.defaults;
 
 function IconWhatsapp() {
   return (
@@ -21,12 +24,13 @@ export default async function Page() {
     const registro = await prisma.paginaTexto.findUnique({ where: { pagina: "centro-educativo-recreativo" } });
     if (registro) contenido = registro.contenido as CerContenido;
   } catch {}
+  const hero = await getHero("centro-educativo-recreativo", DEFAULTS);
 
   return (
     <InternalPage
-      eyebrow="Centro Educativo Recreativo"
-      title="Un espacio pensado para formarnos y encontrarnos."
-      intro="Conocé el Centro Educativo Recreativo (CER) del Colegio, un espacio para la capacitación y el encuentro de los matriculados."
+      eyebrow={hero.eyebrow}
+      title={hero.titulo}
+      intro={hero.intro}
     >
       {contenido.texto && (
         <div className="rounded-3xl border border-slate-200 bg-white p-7 leading-7 text-slate-700 sm:p-8">
