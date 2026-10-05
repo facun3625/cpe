@@ -14,7 +14,7 @@ import type { ValoresUpe } from "@/lib/nomenclador/config";
 export type EstadoNomenclador = { ok: boolean; mensaje: string };
 export type RevisionNomenclador = EstadoNomenclador & {
   hojas?: string[]; hoja?: string; total?: number; muestra?: PrestacionImportada[];
-  valoresUpe?: ValoresUpe | null; referencias?: number; errores?: string[];
+  valoresUpe?: ValoresUpe | null; referencias?: number; errores?: string[]; omitidas?: string[];
 };
 async function requireSession() {
   if (!(await auth())?.user) throw new Error("Tu sesión venció. Volvé a ingresar al panel.");
@@ -52,9 +52,9 @@ export async function revisarPlanilla(formData: FormData): Promise<RevisionNomen
     const { result } = await readFile(formData);
     return {
       ok: !result.errores.length,
-      mensaje: result.errores.length ? "La planilla necesita revisión. No se modificó el nomenclador." : `Se encontraron ${result.items.length} prestaciones listas para publicar.`,
+      mensaje: result.errores.length ? "La planilla necesita revisión. No se modificó el nomenclador." : `Se encontraron ${result.items.length} prestaciones listas para publicar.${result.omitidas.length ? ` ${result.omitidas.length} filas con datos inválidos se omitirán.` : ""}`,
       hojas: result.hojas, hoja: result.hoja, total: result.items.length, muestra: result.items.slice(0, 8),
-      valoresUpe: result.valoresUpe, referencias: result.otrosValores.length, errores: result.errores.slice(0, 30),
+      valoresUpe: result.valoresUpe, referencias: result.otrosValores.length, errores: result.errores.slice(0, 30), omitidas: result.omitidas.slice(0, 50),
     };
   } catch (error) { return { ok: false, mensaje: errorMessage(error) }; }
 }
@@ -84,7 +84,7 @@ export async function publicarPlanilla(formData: FormData): Promise<EstadoNomenc
       await tx.paginaTexto.upsert({ where: { pagina: "nomenclador" }, create: { pagina: "nomenclador", contenido }, update: { contenido } });
     });
     revalidateTodo();
-    return { ok: true, mensaje: `Se publicaron ${input.result.items.length} prestaciones. El Excel descargable ya contiene estos valores.${pdf ? " El PDF también quedó actualizado." : " Podés adjuntar el PDF actualizado desde la sección de abajo."}` };
+    return { ok: true, mensaje: `Se publicaron ${input.result.items.length} prestaciones${input.result.omitidas.length ? ` (se omitieron ${input.result.omitidas.length} filas con datos inválidos)` : ""}. El Excel descargable ya contiene estos valores.${pdf ? " El PDF también quedó actualizado." : " Podés adjuntar el PDF actualizado desde la sección de abajo."}` };
   } catch { return { ok: false, mensaje: "No se pudo publicar la planilla. El nomenclador anterior se conservó; intentá nuevamente." }; }
 }
 

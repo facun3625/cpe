@@ -81,6 +81,10 @@ export function NomencladorCarga({ config }: { config: NomencladorConfig }) {
         {revision && <div className="rounded-xl border border-slate-200 p-4">
           <Mensaje result={revision} />
           {!!revision.errores?.length && <ul className="mt-3 list-inside list-disc space-y-1 text-sm text-red-700">{revision.errores.map((error, i) => <li key={i}>{error}</li>)}</ul>}
+          {!!revision.omitidas?.length && <div className="mt-3 rounded-xl bg-amber-50 p-3">
+            <p className="text-sm font-semibold text-amber-800">Filas que se omiten (datos inválidos). El resto sí se publica:</p>
+            <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-amber-800">{revision.omitidas.map((o, i) => <li key={i}>{o}</li>)}</ul>
+          </div>}
           {!!revision.muestra?.length && <>
             <div className="mt-4 overflow-x-auto"><table className="w-full text-left text-xs"><thead><tr>{["Prestación", "Tiempo", "UPE", "CD", "CN", "DD", "DN"].map((label) => <th key={label} className="whitespace-nowrap px-2 py-2">{label}</th>)}</tr></thead>
               <tbody>{revision.muestra.map((item) => <tr key={item.orden} className="border-t border-slate-100"><td className="min-w-48 px-2 py-2">{item.nombre}{item.noReconocida && " *"}</td><td className="px-2">{item.tiempo}</td><td className="px-2">{item.upe}</td>{AMBITOS.map(({ key }) => <td key={key} className="whitespace-nowrap px-2">{formatearMoneda(item[key])}</td>)}</tr>)}</tbody>

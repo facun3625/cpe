@@ -8,7 +8,7 @@ export type PrestacionImportada = {
 };
 export type PlanillaResultado = {
   hoja: string; hojas: string[]; items: PrestacionImportada[]; valoresUpe: ValoresUpe | null;
-  otrosValores: Referencia[]; errores: string[];
+  otrosValores: Referencia[]; errores: string[]; omitidas: string[];
 };
 const normalizar = (value: unknown) => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
 
@@ -45,7 +45,7 @@ export function parsePlanilla(bytes: Uint8Array, filename: string, hoja?: string
   if (book.SheetNames.length > 50) throw new Error("El archivo tiene demasiadas hojas. Subí únicamente la versión que querés publicar.");
   const candidates = book.SheetNames.filter((name) => headerOf(rowsOf(book.Sheets[name])) >= 0);
   const selected = hoja || (candidates.length === 1 ? candidates[0] : "");
-  const result: PlanillaResultado = { hoja: selected, hojas: candidates, items: [], valoresUpe: null, otrosValores: [], errores: [] };
+  const result: PlanillaResultado = { hoja: selected, hojas: candidates, items: [], valoresUpe: null, otrosValores: [], errores: [], omitidas: [] };
   if (!candidates.length) {
     result.errores.push("No se encontró la tabla de prestaciones. Elegí la hoja con Actividad, Tiempo, Cant./UPE, CD, CN, DD y DN; las tablas de valor hora no reemplazan el nomenclador.");
     return result;
@@ -91,16 +91,16 @@ export function parsePlanilla(bytes: Uint8Array, filename: string, hoja?: string
     if (!time && !String(upeRaw ?? "").trim() && /^(auditor[ií]a|cobertura|peritos?)/i.test(name)) {
       const available = prices.filter((v) => v !== null);
       if (available.length === 1) result.otrosValores.push({ concepto: name, valor: available[0] });
-      else result.errores.push(`Fila ${index + 1}: el valor de referencia «${name}» debe tener un único importe.`);
+      else result.omitidas.push(`Fila ${index + 1}: el valor de referencia «${name}» debe tener un único importe.`);
       continue;
     }
     const upe = parseImporte(upeRaw);
     if (!name || !time || upe === null || !Number.isInteger(upe) || upe <= 0 || prices.some((v) => v === null)) {
-      result.errores.push(`Fila ${index + 1}: revisá actividad, tiempo, UPE entero positivo y los cuatro importes. No se aceptan celdas vacías, negativas o con errores.`);
+      result.omitidas.push(`Fila ${index + 1}: revisá actividad, tiempo, UPE entero positivo y los cuatro importes. No se aceptan celdas vacías, negativas o con errores.`);
       continue;
     }
     const key = normalizar(name);
-    if (seen.has(key)) { result.errores.push(`Fila ${index + 1}: la prestación «${name}» está repetida.`); continue; }
+    if (seen.has(key)) { result.omitidas.push(`Fila ${index + 1}: la prestación «${name}» está repetida.`); continue; }
     seen.add(key);
     result.items.push({ nombre: name, tiempo: time, upe, cd: prices[0]!, cn: prices[1]!, dd: prices[2]!, dn: prices[3]!, noReconocida: /\*\s*$/.test(nameRaw) || ["si", "true", "1"].includes(normalizar(row[flagIndex])), orden: result.items.length });
   }
