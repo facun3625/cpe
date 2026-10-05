@@ -35,7 +35,7 @@ function IconSearch() {
   );
 }
 
-export function BuscadorNomenclador({ items, initialQuery }: { items: ItemNomenclador[]; initialQuery?: string }) {
+export function BuscadorNomenclador({ items, initialQuery, tituloTabla }: { items: ItemNomenclador[]; initialQuery?: string; tituloTabla: string }) {
   const columnas = "sm:grid-cols-[1fr_55px_55px_90px_90px_90px_90px]";
   const [query, setQuery] = useState(initialQuery ?? "");
   const [pagina, setPagina] = useState(1);
@@ -73,6 +73,13 @@ export function BuscadorNomenclador({ items, initialQuery }: { items: ItemNomenc
       </p>
 
       <div className="mt-3 overflow-hidden rounded-3xl border border-slate-200 bg-white">
+        <p className="hidden border-b border-slate-200 bg-cpe-navy px-6 py-3 text-center text-xs font-bold uppercase tracking-wide text-white sm:block">{tituloTabla}</p>
+        <div className={`hidden ${columnas} gap-2 border-b border-slate-200 bg-cpe-bg px-6 pt-2 text-[10px] font-bold uppercase tracking-wide text-cpe-coral sm:grid`}>
+          <span />
+          <span />
+          <span />
+          <span className="col-span-4 text-center">Valor U.P.E.</span>
+        </div>
         <div className={`hidden ${columnas} gap-2 border-b border-slate-200 bg-cpe-bg px-6 py-3 text-[11px] font-bold uppercase tracking-wide text-slate-500 sm:grid`}>
           <span>Prestación</span>
           <span className="text-right">Tiempo</span>
@@ -99,7 +106,7 @@ export function BuscadorNomenclador({ items, initialQuery }: { items: ItemNomenc
                   )}
                 </div>
                 <span className="text-xs text-slate-500 sm:text-right"><span className="sm:hidden">Tiempo: </span>{a.tiempo}</span>
-                <span className="text-xs text-slate-500 sm:text-right"><span className="sm:hidden">Cant.: </span>{a.upe}</span>
+                <span className="text-xs text-slate-500 sm:text-right"><span className="sm:hidden">Cant.: </span>{a.upe} U</span>
                 <span className="text-sm font-medium text-cpe-navy sm:text-right"><span className="sm:hidden">Consultorio diurno: </span>{formatearMoneda(a.cd)}</span>
                 <span className="text-sm font-medium text-cpe-navy sm:text-right"><span className="sm:hidden">Consultorio nocturno: </span>{formatearMoneda(a.cn)}</span>
                 <span className="text-sm font-medium text-cpe-navy sm:text-right"><span className="sm:hidden">Domicilio diurno: </span>{formatearMoneda(a.dd ?? a.cn)}</span>

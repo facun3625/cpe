@@ -16,11 +16,13 @@ export type NomencladorConfig = {
   archivoNombre: string | null;
   publicadoEn: string | null;
   mostrarDescarga: MostrarDescarga;
+  tituloTabla: string;
 };
+export const TITULO_TABLA_DEFAULT = "ARANCELES SUGERIDOS PARA LAS PRESTACIONES DE ENFERMERÍA (*No incluye insumos)";
 export const DEFAULT_CONFIG: NomencladorConfig = {
   valoresUpe: { cd: VALORES_UPE[0].valor, cn: VALORES_UPE[1].valor, dd: VALORES_UPE[2].valor, dn: VALORES_UPE[3].valor },
   otrosValores: OTROS_VALORES,
-  pdfUrl: null, archivoNombre: null, publicadoEn: null, mostrarDescarga: "ambos",
+  pdfUrl: null, archivoNombre: null, publicadoEn: null, mostrarDescarga: "ambos", tituloTabla: TITULO_TABLA_DEFAULT,
 };
 export function readNomencladorConfig(value: unknown): NomencladorConfig {
   if (!value || typeof value !== "object" || Array.isArray(value)) return { ...DEFAULT_CONFIG };
@@ -37,5 +39,6 @@ export function readNomencladorConfig(value: unknown): NomencladorConfig {
     archivoNombre: typeof data.archivoNombre === "string" ? data.archivoNombre : null,
     publicadoEn: typeof data.publicadoEn === "string" ? data.publicadoEn : null,
     mostrarDescarga: data.mostrarDescarga === "excel" || data.mostrarDescarga === "pdf" ? data.mostrarDescarga : "ambos",
+    tituloTabla: typeof data.tituloTabla === "string" && data.tituloTabla.trim() ? data.tituloTabla : TITULO_TABLA_DEFAULT,
   };
 }

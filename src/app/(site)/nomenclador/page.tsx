@@ -4,6 +4,9 @@ import { BuscadorNomenclador } from "@/components/nomenclador/buscador";
 import { formatearMoneda } from "@/components/nomenclador/data";
 import { prisma } from "@/lib/prisma";
 import { getHero, HEROES } from "@/lib/page-hero";
+import { getNomencladorPopup } from "@/lib/nomenclador/popup";
+import { NomencladorPopupModal } from "@/components/nomenclador/popup-modal";
+import { RichText } from "@/components/rich-text";
 
 export const dynamic = "force-dynamic";
 
@@ -22,8 +25,11 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ q
     config = readNomencladorConfig(registro?.contenido);
   } catch {}
   const hero = await getHero("nomenclador", DEFAULTS);
+  const popup = await getNomencladorPopup();
 
   return (
+    <>
+    {popup.activo && popup.texto && <NomencladorPopupModal titulo={popup.titulo}><RichText value={popup.texto} /></NomencladorPopupModal>}
     <InternalPage
       eyebrow={hero.eyebrow}
       title={hero.titulo}
@@ -51,7 +57,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ q
           Cada actividad de enfermería está cuantificada en minutos y expresada en Unidades de Producción de Enfermería (U.P.E., de 3 minutos cada una).
         </p>
         <div className="mt-5">
-          <BuscadorNomenclador items={items} initialQuery={q} />
+          <BuscadorNomenclador items={items} initialQuery={q} tituloTabla={config.tituloTabla} />
         </div>
       </div>
 
@@ -71,5 +77,6 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ q
         Los aranceles son orientativos y sin insumos; el profesional podrá adaptarlos según su actividad diaria y las características de la comunidad donde realiza la atención. Se actualizan anualmente a partir de febrero de cada año.
       </p>
     </InternalPage>
+    </>
   );
 }

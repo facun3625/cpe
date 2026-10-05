@@ -111,19 +111,28 @@ export function parsePlanilla(bytes: Uint8Array, filename: string, hoja?: string
 export function exportPlanilla(items: (Omit<PrestacionImportada, "dd" | "orden"> & { dd?: number | null })[], config: NomencladorConfig) {
   const { cd, cn, dd, dn } = config.valoresUpe;
   const rows: (string | number)[][] = [
-    ["ARANCELES SUGERIDOS PARA LAS PRESTACIONES DE ENFERMERÍA"],
-    ["", "UPE", "", "C.D.", "C.N.", "D.D.", "D.N.", "No reconocida"],
-    ["Actividad", "Tiempo", "Cant.", cd, cn, dd, dn],
+    [config.tituloTabla],
+    ["", "", "", "VALOR UPE", "", "", ""],
+    ["Actividad", "Tiempo", "Cant.", "C.D.", "C.N.", "D.D.", "D.N.", "No reconocida"],
+    ["Valor por U.P.E.", "", "", cd, cn, dd, dn],
     ...items.map((item) => [plainText(item.nombre), item.tiempo, item.upe, item.cd, item.cn, item.dd ?? item.cn, item.dn, item.noReconocida ? "Sí" : "No"]),
     [],
     ...config.otrosValores.map((r) => [r.concepto, "", "", "", "", "", r.valor]),
     ["NO INCLUYE INSUMOS"],
   ];
   const sheet = XLSX.utils.aoa_to_sheet(rows);
+  sheet["!merges"] = [
+    { s: { r: 0, c: 0 }, e: { r: 0, c: 7 } },
+    { s: { r: 1, c: 3 }, e: { r: 1, c: 6 } },
+  ];
   sheet["!cols"] = [{ wch: 65 }, { wch: 12 }, { wch: 10 }, ...Array.from({ length: 4 }, () => ({ wch: 18 })), { wch: 18 }];
-  for (let r = 2; r < rows.length; r++) for (let c = 3; c <= 6; c++) {
+  for (let r = 3; r < rows.length; r++) for (let c = 3; c <= 6; c++) {
     const cell = sheet[XLSX.utils.encode_cell({ r, c })];
     if (cell?.t === "n") cell.z = '"$" #,##0.00';
+  }
+  for (let r = 4; r < 4 + items.length; r++) {
+    const cell = sheet[XLSX.utils.encode_cell({ r, c: 2 })];
+    if (cell?.t === "n") cell.z = '0" U"';
   }
   const book = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(book, sheet, "Aranceles");

@@ -4,7 +4,10 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { saveUploadedFile } from "@/lib/upload";
-import { AMBITOS, readNomencladorConfig, type MostrarDescarga } from "@/lib/nomenclador/config";
+import { AMBITOS, readNomencladorConfig, TITULO_TABLA_DEFAULT, type MostrarDescarga } from "@/lib/nomenclador/config";
+import { NOMENCLADOR_POPUP_KEY } from "@/lib/nomenclador/popup";
+import { readRichText } from "@/lib/rich-text";
+import { redirect } from "next/navigation";
 import { parseImporte, parsePlanilla, type PrestacionImportada } from "@/lib/nomenclador/planilla";
 import type { ValoresUpe } from "@/lib/nomenclador/config";
 
@@ -135,4 +138,32 @@ export async function guardarPdfNomenclador(formData: FormData): Promise<EstadoN
     revalidateTodo();
     return { ok: true, mensaje: "El PDF ya está disponible para descargar." };
   } catch { return { ok: false, mensaje: "No se pudo guardar el PDF. Intentá nuevamente." }; }
+}
+
+export async function guardarTextosNomenclador(formData: FormData) {
+  await requireSession();
+  const titulo = String(formData.get("tituloTabla") ?? "").trim();
+  await prisma.$transaction(async (tx) => {
+    const registro = await tx.paginaTexto.findUnique({ where: { pagina: "nomenclador" } });
+    const contenido = { ...readNomencladorConfig(registro?.contenido), tituloTabla: titulo || TITULO_TABLA_DEFAULT };
+    await tx.paginaTexto.upsert({ where: { pagina: "nomenclador" }, create: { pagina: "nomenclador", contenido }, update: { contenido } });
+  });
+  revalidateTodo();
+  redirect("/admin/nomenclador?titulo=1");
+}
+
+export async function guardarPopupNomenclador(formData: FormData) {
+  await requireSession();
+  const contenido = {
+    activo: formData.get("activo") === "on",
+    titulo: String(formData.get("titulo") ?? "").trim(),
+    texto: readRichText(formData.get("texto")),
+  };
+  await prisma.paginaTexto.upsert({
+    where: { pagina: NOMENCLADOR_POPUP_KEY },
+    update: { contenido },
+    create: { pagina: NOMENCLADOR_POPUP_KEY, contenido },
+  });
+  revalidateTodo();
+  redirect("/admin/nomenclador?popup=1");
 }
