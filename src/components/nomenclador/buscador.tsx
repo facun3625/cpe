@@ -36,7 +36,7 @@ function IconSearch() {
 }
 
 export function BuscadorNomenclador({ items, initialQuery, tituloTabla }: { items: ItemNomenclador[]; initialQuery?: string; tituloTabla: string }) {
-  const columnas = "sm:grid-cols-[1fr_55px_55px_90px_90px_90px_90px]";
+  const columnas = "sm:grid-cols-[1fr_60px_60px_110px_110px_110px_110px]";
   const [query, setQuery] = useState(initialQuery ?? "");
   const [pagina, setPagina] = useState(1);
 
@@ -84,10 +84,10 @@ export function BuscadorNomenclador({ items, initialQuery, tituloTabla }: { item
           <span>Prestación</span>
           <span className="text-right">Tiempo</span>
           <span className="text-right">Cant.</span>
-          <span className="text-right">Consultorio D.</span>
-          <span className="text-right">Consultorio N.</span>
-          <span className="text-right">Domicilio D.</span>
-          <span className="text-right">Domicilio N.</span>
+          <span className="whitespace-nowrap text-right leading-tight">Consultorio<br />diurno</span>
+          <span className="whitespace-nowrap text-right leading-tight">Consultorio<br />nocturno</span>
+          <span className="whitespace-nowrap text-right leading-tight">Domicilio<br />diurno</span>
+          <span className="whitespace-nowrap text-right leading-tight">Domicilio<br />nocturno</span>
         </div>
         <div className="divide-y divide-slate-200">
           {resultadosPagina.length === 0 ? (
