@@ -1,5 +1,5 @@
 import { getHomeHero } from "@/lib/home-hero";
-import { Card, Field, TextInput, TextArea, SubmitButton } from "@/components/admin/fields";
+import { Field, TextInput, TextArea, SubmitButton } from "@/components/admin/fields";
 import { guardarInicio } from "./actions";
 
 export default async function AdminInicioPage({ searchParams }: { searchParams: Promise<{ guardado?: string }> }) {
@@ -7,53 +7,55 @@ export default async function AdminInicioPage({ searchParams }: { searchParams: 
   const h = await getHomeHero();
 
   return (
-    <div>
-      <h1 className="text-2xl font-semibold text-gray-900">Portada (inicio)</h1>
-      <p className="mt-1 text-sm text-gray-500">Textos del bloque principal de la página de inicio.</p>
-
-      {guardado && (
-        <p role="status" className="mt-4 max-w-2xl rounded-xl bg-emerald-50 px-4 py-2.5 text-sm text-emerald-800">
-          Cambios guardados.
-        </p>
-      )}
-
-      <div className="mt-6 max-w-2xl">
-        <Card title="Bloque principal" hint="El título se divide en dos partes: la segunda se muestra en color destacado.">
-          <form action={guardarInicio} className="space-y-4">
-            <Field label="Título (primera parte)">
-              <TextInput name="tituloInicio" defaultValue={h.tituloInicio} />
-            </Field>
-            <Field label="Título (parte destacada)">
-              <TextInput name="tituloDestacado" defaultValue={h.tituloDestacado} />
-            </Field>
-            <Field label="Bajada">
-              <TextArea rich={false} name="bajada" rows={3} defaultValue={h.bajada} />
-            </Field>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Texto del botón">
-                <TextInput name="botonTexto" defaultValue={h.botonTexto} />
-              </Field>
-              <Field label="Link del botón">
-                <TextInput name="botonHref" defaultValue={h.botonHref} placeholder="/matriculados" />
-              </Field>
-            </div>
-
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Estadísticas (dejá vacías las que no quieras mostrar)</p>
-              <div className="mt-3 space-y-3">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="grid gap-3 sm:grid-cols-2">
-                    <TextInput name={`statValor${i}`} placeholder="Valor (ej. +40 años)" defaultValue={h.stats[i - 1]?.valor ?? ""} />
-                    <TextInput name={`statEtiqueta${i}`} placeholder="Etiqueta (ej. de compromiso)" defaultValue={h.stats[i - 1]?.etiqueta ?? ""} />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <SubmitButton>Guardar cambios</SubmitButton>
-          </form>
-        </Card>
+    <div className="flex flex-col lg:h-[calc(100vh-5rem)]">
+      <div className="flex items-baseline justify-between gap-4">
+        <div>
+          <h1 className="text-xl font-semibold text-gray-900">Portada (inicio)</h1>
+          <p className="text-xs text-gray-500">Bloque principal de la página de inicio.</p>
+        </div>
+        {guardado && <p role="status" className="rounded-lg bg-emerald-50 px-3 py-1.5 text-xs text-emerald-800">Cambios guardados.</p>}
       </div>
+
+      <form action={guardarInicio} className="mt-3 grid min-h-0 flex-1 grid-cols-1 gap-3 lg:grid-cols-2">
+        <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-cpe-royal">Título</p>
+          <Field label="Primera parte">
+            <TextInput name="tituloInicio" defaultValue={h.tituloInicio} />
+          </Field>
+          <Field label="Parte destacada (en color)">
+            <TextInput name="tituloDestacado" defaultValue={h.tituloDestacado} />
+          </Field>
+          <Field label="Bajada">
+            <TextArea rich={false} name="bajada" rows={4} defaultValue={h.bajada} />
+          </Field>
+        </div>
+
+        <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-cpe-royal">Botón</p>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Texto">
+              <TextInput name="botonTexto" defaultValue={h.botonTexto} />
+            </Field>
+            <Field label="Link">
+              <TextInput name="botonHref" defaultValue={h.botonHref} placeholder="/matriculados" />
+            </Field>
+          </div>
+
+          <p className="pt-1 text-[11px] font-bold uppercase tracking-widest text-cpe-royal">Estadísticas (opcional)</p>
+          <div className="grid grid-cols-2 gap-2">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="contents">
+                <TextInput name={`statValor${i}`} placeholder={`Valor ${i}`} defaultValue={h.stats[i - 1]?.valor ?? ""} />
+                <TextInput name={`statEtiqueta${i}`} placeholder={`Etiqueta ${i}`} defaultValue={h.stats[i - 1]?.etiqueta ?? ""} />
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-auto pt-2">
+            <SubmitButton>Guardar cambios</SubmitButton>
+          </div>
+        </div>
+      </form>
     </div>
   );
 }

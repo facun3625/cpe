@@ -16,11 +16,7 @@ export const HOME_HERO_DEFAULTS: HomeHero = {
   bajada: "Acompañamos, representamos y fortalecemos a las y los profesionales de enfermería en cada etapa de su ejercicio.",
   botonTexto: "Consultar matrícula",
   botonHref: "/matriculados",
-  stats: [
-    { valor: "3", etiqueta: "Delegaciones" },
-    { valor: "+40 años", etiqueta: "de compromiso" },
-    { valor: "Toda Santa Fe", etiqueta: "en red" },
-  ],
+  stats: [],
 };
 
 export const HOME_HERO_KEY = "home-hero";
