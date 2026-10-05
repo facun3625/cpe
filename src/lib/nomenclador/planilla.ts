@@ -112,7 +112,7 @@ export function exportPlanilla(items: (Omit<PrestacionImportada, "dd" | "orden">
   const { cd, cn, dd, dn } = config.valoresUpe;
   const rows: (string | number)[][] = [
     [config.tituloTabla],
-    ["", "", "", "VALOR UPE", "", "", ""],
+    ["", "UPE", "", "VALOR UPE", "", "", ""],
     ["Actividad", "Tiempo", "Cant.", "C.D.", "C.N.", "D.D.", "D.N.", "No reconocida"],
     ["Valor por U.P.E.", "", "", cd, cn, dd, dn],
     ...items.map((item) => [plainText(item.nombre), item.tiempo, item.upe, item.cd, item.cn, item.dd ?? item.cn, item.dn, item.noReconocida ? "Sí" : "No"]),
@@ -123,6 +123,7 @@ export function exportPlanilla(items: (Omit<PrestacionImportada, "dd" | "orden">
   const sheet = XLSX.utils.aoa_to_sheet(rows);
   sheet["!merges"] = [
     { s: { r: 0, c: 0 }, e: { r: 0, c: 7 } },
+    { s: { r: 1, c: 1 }, e: { r: 1, c: 2 } },
     { s: { r: 1, c: 3 }, e: { r: 1, c: 6 } },
   ];
   sheet["!cols"] = [{ wch: 65 }, { wch: 12 }, { wch: 10 }, ...Array.from({ length: 4 }, () => ({ wch: 18 })), { wch: 18 }];

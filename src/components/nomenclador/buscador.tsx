@@ -76,8 +76,7 @@ export function BuscadorNomenclador({ items, initialQuery, tituloTabla }: { item
         <p className="hidden border-b border-slate-200 bg-cpe-navy px-6 py-3 text-center text-xs font-bold uppercase tracking-wide text-white sm:block">{tituloTabla}</p>
         <div className={`hidden ${columnas} gap-2 border-b border-slate-200 bg-cpe-bg px-6 pt-2 text-[10px] font-bold uppercase tracking-wide text-cpe-coral sm:grid`}>
           <span />
-          <span />
-          <span />
+          <span className="col-span-2 text-center">UPE</span>
           <span className="col-span-4 text-center">Valor U.P.E.</span>
         </div>
         <div className={`hidden ${columnas} gap-2 border-b border-slate-200 bg-cpe-bg px-6 py-3 text-[11px] font-bold uppercase tracking-wide text-slate-500 sm:grid`}>
