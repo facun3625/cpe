@@ -50,23 +50,31 @@ const POR_PAGINA = 50;
 
 export function BuscadorMatriculados({ matriculados, initialQuery }: { matriculados: Matriculado[]; initialQuery?: string }) {
   const [query, setQuery] = useState(initialQuery ?? "");
+  const [queryMatricula, setQueryMatricula] = useState("");
   const [pagina, setPagina] = useState(1);
   const [orden, setOrden] = useState<Orden>("apellido");
 
   const resultados = useMemo(() => {
     const q = normalizar(query.trim());
+    const qMatricula = normalizar(queryMatricula.trim());
     let lista = matriculados;
 
     if (q) {
       const tokens = q.replace(/,/g, " ").split(/\s+/).filter(Boolean);
       const soloDigitos = q.replace(/\D/g, "");
 
-      lista = matriculados.filter((m) => {
+      lista = lista.filter((m) => {
         const palabras = normalizar(`${m.apellido} ${m.nombre}`).split(/\s+/).filter(Boolean);
         const coincideNombre = tokens.every((t) => palabras.some((p) => p.startsWith(t)));
         const coincideDni = soloDigitos.length > 0 && m.dni.replace(/\./g, "").startsWith(soloDigitos);
-        const coincideMatricula = normalizar(m.matricula).startsWith(q) || (soloDigitos.length > 0 && m.matricula.replace(/\D/g, "").startsWith(soloDigitos));
-        return coincideNombre || coincideDni || coincideMatricula;
+        return coincideNombre || coincideDni;
+      });
+    }
+
+    if (qMatricula) {
+      const soloDigitosMatricula = qMatricula.replace(/\D/g, "");
+      lista = lista.filter((m) => {
+        return normalizar(m.matricula).startsWith(qMatricula) || (soloDigitosMatricula.length > 0 && m.matricula.replace(/\D/g, "").startsWith(soloDigitosMatricula));
       });
     }
 
@@ -79,7 +87,7 @@ export function BuscadorMatriculados({ matriculados, initialQuery }: { matricula
     }
 
     return lista;
-  }, [matriculados, query, orden]);
+  }, [matriculados, query, queryMatricula, orden]);
 
   const totalPaginas = Math.max(1, Math.ceil(resultados.length / POR_PAGINA));
   const paginaActual = Math.min(pagina, totalPaginas);
@@ -87,6 +95,11 @@ export function BuscadorMatriculados({ matriculados, initialQuery }: { matricula
 
   function handleQuery(value: string) {
     setQuery(value);
+    setPagina(1);
+  }
+
+  function handleQueryMatricula(value: string) {
+    setQueryMatricula(value);
     setPagina(1);
   }
 
@@ -104,7 +117,17 @@ export function BuscadorMatriculados({ matriculados, initialQuery }: { matricula
             type="text"
             value={query}
             onChange={(e) => handleQuery(e.target.value)}
-            placeholder="Buscá por apellido, nombre, DNI o matrícula…"
+            placeholder="Buscá por apellido, nombre o DNI…"
+            className="min-h-14 w-full rounded-full border border-slate-200 bg-white pl-14 pr-5 text-sm text-cpe-navy shadow-sm outline-none transition focus:border-cpe-royal focus:ring-4 focus:ring-cpe-royal/10"
+          />
+        </div>
+        <div className="relative sm:w-56">
+          <span className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2"><IconSearch /></span>
+          <input
+            type="text"
+            value={queryMatricula}
+            onChange={(e) => handleQueryMatricula(e.target.value)}
+            placeholder="Matrícula…"
             className="min-h-14 w-full rounded-full border border-slate-200 bg-white pl-14 pr-5 text-sm text-cpe-navy shadow-sm outline-none transition focus:border-cpe-royal focus:ring-4 focus:ring-cpe-royal/10"
           />
         </div>
